@@ -58,6 +58,8 @@ Rules specific to finance/banking copy:
 
 Per `a-b-testing-guide.md`, generate 3 variants each for: subject line, hero headline, and primary CTA button text. Each variant must use a genuinely different psychological angle (rational/data-driven, emotional/aspirational, urgency/direct) — not a synonym swap. Briefly state the reasoning behind each variant and which one you'd recommend testing as the control vs. challenger, and why.
 
+If no genuine urgency/time-bound angle exists for this content, produce only Variant A (rational) and Variant B (emotional) as a 2-variant test, and say so explicitly — do not fabricate a Variant C to fill the pattern.
+
 ## Step 5: Output format
 
 Produce two things:
