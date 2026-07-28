@@ -1,17 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 from datetime import datetime
 import uuid
 import json
 import anthropic
+import logging
+import os
 
+from backend.api.auth import get_current_user
 from backend.db import get_db
 from backend.db.models import Newsletter, User, ComplianceAudit
 from backend.utils.compliance import run_compliance_audit
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/newsletters", tags=["newsletters"])
-client = anthropic.Anthropic()
+
+# Get Anthropic client
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 class NewsletterRequirements(BaseModel):
     audience: str
@@ -20,6 +26,16 @@ class NewsletterRequirements(BaseModel):
     objective: str
     key_content: str
     compliance_notes: str = ""
+
+    @field_validator('audience', 'purpose', 'tone', 'objective', 'key_content', 'compliance_notes')
+    def validate_string_fields(cls, v):
+        if not isinstance(v, str):
+            raise ValueError('Field must be a string')
+        if len(v) > 1000:
+            raise ValueError('Field too long (max 1000 characters)')
+        if len(v.strip()) == 0:
+            raise ValueError('Field cannot be empty')
+        return v.strip()
 
 class NewsletterResponse(BaseModel):
     id: str
@@ -65,12 +81,12 @@ Output as JSON with:
 @router.post("/generate", response_model=NewsletterResponse)
 async def generate_newsletter(
     requirements: NewsletterRequirements,
-    user_id: str,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Generate a newsletter using the finance-newsletter skill"""
+    """Generate a newsletter using the finance-newsletter skill (requires authentication)"""
 
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == current_user.id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -80,15 +96,18 @@ async def generate_newsletter(
     # Check tier limits
     if user.newsletters_generated >= user.monthly_limit:
         raise HTTPException(
-            status_code=429,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail=f"Monthly limit ({user.monthly_limit}) reached. Upgrade to generate more."
         )
 
     try:
         prompt = get_newsletter_prompt(requirements)
 
+        # Use environment variable for model selection
+        model = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
+
         message = client.messages.create(
-            model="claude-opus-4-1-20250805",
+            model=model,
             max_tokens=4096,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -102,6 +121,7 @@ async def generate_newsletter(
             json_str = response_text[start_idx:end_idx]
             output = json.loads(json_str)
         except (json.JSONDecodeError, ValueError):
+            logger.warning(f"Failed to parse Claude response as JSON for user {user.id}")
             output = {
                 "primary_copy": response_text,
                 "variants": [],
@@ -116,13 +136,13 @@ async def generate_newsletter(
         newsletter_id = str(uuid.uuid4())
         newsletter = Newsletter(
             id=newsletter_id,
-            user_id=user_id,
+            user_id=user.id,
             title=f"Newsletter - {datetime.utcnow().strftime('%Y-%m-%d')}",
             template_type=requirements.purpose,
             requirements=json.dumps(requirements.dict()),
             generated_copy=output.get("primary_copy", ""),
             variants=json.dumps(output.get("variants", [])),
-            compliance_status="passed" if compliance_audit["passed"] else "flagged",
+            compliance_status="passed" if compliance_audit.get("passed", False) else "flagged",
             compliance_details=json.dumps(compliance_audit)
         )
 
@@ -132,10 +152,10 @@ async def generate_newsletter(
         audit = ComplianceAudit(
             id=str(uuid.uuid4()),
             newsletter_id=newsletter_id,
-            user_id=user_id,
+            user_id=user.id,
             audit_results=json.dumps(compliance_audit),
             violations=json.dumps(compliance_audit.get("violations", [])),
-            passed=compliance_audit["passed"]
+            passed=compliance_audit.get("passed", False)
         )
 
         db.add(audit)
@@ -154,16 +174,36 @@ async def generate_newsletter(
             created_at=newsletter.created_at
         )
 
+    except anthropic.APIError as e:
+        db.rollback()
+        logger.error(f"Anthropic API error for user {current_user.id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Generation service temporarily unavailable"
+        )
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+        logger.error(f"Newsletter generation error for user {current_user.id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Newsletter generation failed"
+        )
 
 @router.get("/{newsletter_id}")
-async def get_newsletter(newsletter_id: str, db: Session = Depends(get_db)):
-    """Retrieve a generated newsletter"""
+async def get_newsletter(
+    newsletter_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Retrieve a generated newsletter (requires authentication and ownership verification)"""
+
     newsletter = db.query(Newsletter).filter(Newsletter.id == newsletter_id).first()
     if not newsletter:
         raise HTTPException(status_code=404, detail="Newsletter not found")
+
+    # Verify user owns this newsletter
+    if newsletter.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to access this newsletter")
 
     return {
         "id": newsletter.id,
@@ -174,10 +214,16 @@ async def get_newsletter(newsletter_id: str, db: Session = Depends(get_db)):
         "created_at": newsletter.created_at
     }
 
-@router.get("/user/{user_id}")
-async def list_user_newsletters(user_id: str, db: Session = Depends(get_db)):
-    """List all newsletters for a user"""
-    newsletters = db.query(Newsletter).filter(Newsletter.user_id == user_id).order_by(Newsletter.created_at.desc()).all()
+@router.get("/user/newsletters/list")
+async def list_user_newsletters(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """List all newsletters for current user (requires authentication)"""
+
+    newsletters = db.query(Newsletter).filter(
+        Newsletter.user_id == current_user.id
+    ).order_by(Newsletter.created_at.desc()).all()
 
     return [
         {
