@@ -1,0 +1,736 @@
+================================================================================
+              CMA EXCEL WORKBOOK - USER GUIDE & INSTRUCTIONS
+              Canara Vahan Loan Analysis - 7 Year Term
+================================================================================
+
+WORKBOOK OVERVIEW:
+================================================================================
+Filename: CMA_Malusare_7Years_714Lakh.xlsx
+
+This Excel workbook is a comprehensive Credit Monitoring Account analysis tool
+containing 6 interconnected worksheets with live formulas for dynamic analysis.
+
+Total Workbook Structure:
+- Appraisal Summary (Executive summary with recommendation)
+- Loan Summary (Loan details and EMI calculations)
+- Financials (Historical + 7-year projections)
+- Debt Service (Year-wise amortization schedule)
+- Ratios & Covenants (Financial analysis and DSCR)
+- Cash Flow (7-year cash flow projections)
+
+All calculations use live Excel formulas that automatically update when base
+assumptions are changed.
+
+================================================================================
+SHEET 1: APPRAISAL SUMMARY
+================================================================================
+
+Purpose: Executive summary for quick review by approval authority
+
+Key Sections:
+
+1. BORROWER PROFILE
+   Fields to Verify/Update:
+   - Borrower Name: M/S. MALUSARE ENTERPRISES [Fixed]
+   - Business Type: [Update if different from Transport]
+   - Proprietor: Mrs. Shila Kishor Malusare [Verify from documents]
+   - Location: [Update with exact address]
+   - Experience: [Fill years of business operations]
+
+2. LOAN PARTICULARS [All pre-filled - No changes needed]
+   - Loan Amount: Rs. 7,14,000 [FIXED]
+   - Tenor: 7 Years [FIXED]
+   - Interest Rate: 9.50% [Update if rate changed]
+   - EMI Amount: Auto-calculated (Do not manually enter)
+
+3. FINANCIAL POSITION
+   CRITICAL FIELDS TO UPDATE WITH ACTUAL DATA:
+   - Gross Revenue (FY 2025-26): Enter actual revenue (currently shows placeholder)
+   - EBITDA: Will auto-calculate based on margin assumptions
+   - Annual EMI Obligation: Auto-calculated
+
+   How to Update:
+   Step 1: Go to Sheet "Financials"
+   Step 2: Enter actual revenue in cell D3 (FY 2025-26)
+   Step 3: Verify COGS percentage in D5 (default 70%)
+   Step 4: All other calculations auto-populate
+
+4. FINANCIAL RATIOS [Auto-calculated]
+   - DSCR: Automatically calculated from financials
+   - Interest Coverage: Automatically calculated
+   - Loan-to-Value: Automatically calculated
+   - Margin Analysis: Automatically calculated
+
+   Green Light Status:
+   - DSCR > 1.50x ✓ Adequate
+   - ICR > 2.50x ✓ Comfortable
+   - LTV < 50% ✓ Acceptable
+
+5. CREDIT STRENGTHS [Reference information - Read only]
+   Pre-filled with common strength indicators for transport sector
+
+6. CREDIT CONCERNS & MITIGANTS [Reference information]
+   Pre-filled sector-specific concerns with corresponding mitigants
+
+7. LOAN COVENANTS [Required - Customize as needed]
+   Pre-filled standard covenants - Update based on actual loan structure:
+   - Security requirements
+   - Insurance requirements
+   - Reporting requirements
+   - Frequency of monitoring
+
+8. CREDIT RECOMMENDATION [Final approval decision]
+   Status: PRE-FILLED AS "APPROVED"
+
+   How to Use:
+   - Review entire sheet before making approval decision
+   - Update status if conditions need to be added
+   - Reference covenants section before approval
+   - Ensure all financial checks are green
+
+================================================================================
+SHEET 2: LOAN SUMMARY
+================================================================================
+
+Purpose: Detailed loan mechanics and monthly/annual calculations
+
+Content:
+
+1. LOAN DETAILS SECTION (Rows 1-13)
+   Borrower Name: [Reference only]
+   Proprietor: [Reference only]
+   Business Type: [Reference only]
+   Loan Amount: Rs. 7,14,000 [FIXED]
+   Tenor: 7 Years [FIXED]
+   Interest Rate: 9.50% [Can be updated if terms change]
+   Monthly Interest Rate: Auto-calculated (0.79% = 9.50%/12)
+   Total Months: 84 (Calculated from 7 years)
+
+   Formula Used for Monthly EMI:
+   EMI = P × r × (1+r)^n / ((1+r)^n - 1)
+   Where: P = Principal, r = Monthly interest rate, n = Number of months
+
+2. EMI CALCULATIONS (Rows 15-20)
+   Monthly EMI: Rs. 12,844 [Auto-calculated - Do not modify]
+
+   This is calculated using the standard EMI formula based on:
+   - Principal: Rs. 7,14,000
+   - Tenure: 84 months
+   - Monthly interest rate: 0.7917%
+
+   Total Amount to be Repaid: Rs. 10,78,896 (=84 × 12,844)
+   Total Interest Payable: Rs. 3,64,896 (= Total - Principal)
+
+3. KEY ASSUMPTIONS (Rows 23-24)
+   Average Annual Growth: 12.5% [CAN BE MODIFIED]
+
+   How to Change Growth Rate:
+   - Default: 12.5% (conservative for transport)
+   - Range: 10-15% (realistic for SME transport)
+   - If changing: Update this cell and all Financials sheet projections auto-update
+
+   Impact of Growth Rate Change:
+   - Higher growth (15%) → Better DSCR, lower risk
+   - Lower growth (10%) → Tighter DSCR, more conservative
+   - Test sensitivity by changing this rate
+
+IMPORTANT NOTES:
+- EMI is Fixed for entire tenure (unless floating rate product)
+- Interest component decreases each year
+- Principal component increases each year
+- Total EMI remains constant at Rs. 12,844/month
+
+================================================================================
+SHEET 3: FINANCIALS
+================================================================================
+
+Purpose: Core financial analysis - Historical data + 7-year projections
+
+ROW LAYOUT:
+
+Row 1: Header "FINANCIAL ANALYSIS - HISTORICAL & PROJECTED"
+Row 3: Year Headers (FY 2023-24 to FY 2031-32, with asterisks for projections)
+
+SECTIONS (with row ranges):
+
+1. OPERATING INCOME SECTION
+   Row 4: Gross Revenue (Rs. Lakh)
+
+   HOW TO POPULATE:
+   - Col B (FY 2023-24): Enter if available from 3-year historical data
+   - Col C (FY 2024-25): Enter if available
+   - Col D (FY 2025-26): Enter ACTUAL revenue for base year [CRITICAL]
+   - Cols E-J (FY 2026-27 to 2031-32): Auto-calculated with 12.5% growth
+
+   If you change revenue in D (base year), all projections auto-update
+   Example: If base revenue is Rs. 500L, Year 1 becomes Rs. 562.5L, etc.
+
+2. COST OF OPERATIONS
+   Row 5: Cost of Operations (% of Revenue) = 70% [DEFAULT - CAN CHANGE]
+   Row 6: Cost of Operations (Rs. Lakh) = Auto-calculated (Revenue × 70%)
+
+   How to Adjust:
+   - Default assumes 70% cost/expense ratio
+   - Can be adjusted based on actual cost structure
+   - Typical range for transport: 65-75%
+   - Higher %: Tighter margins, lower profitability
+   - Lower %: Better margins, more profitable
+
+3. PROFITABILITY METRICS
+   Row 7: EBITDA (Rs. Lakh) = Revenue - Cost of Operations
+
+   Interpretation:
+   - Current assumption: 30% EBITDA margin
+   - Year 1 EBITDA = Rs. 562.5L × 30% = Rs. 168.75L
+   - If actual revenue different, EBITDA auto-adjusts
+
+   Row 9: Depreciation (Rs. Lakh) = Fixed at Rs. 8L/year
+   [Change if actual depreciation is different]
+
+   Row 10: EBIT (Rs. Lakh) = EBITDA - Depreciation
+   [Proxy for operating profit]
+
+   Row 12: Interest Expense (Term Loan) = Rs. 0
+   [NOTE: This should be linked to Debt Service sheet if detailed tracking needed]
+   [Currently placeholder - Can be updated with actual interest by year]
+
+   Row 13: PBT (Profit Before Tax) = EBIT - Interest
+   [Note: In year 1 with interest ~Rs. 6.78L: PBT = 142L - 6.78L = 135.22L]
+
+   Row 14: Tax @ 30% = PBT × 30% [Standard corporate tax rate]
+   [Can be adjusted if special tax regime applies]
+
+   Row 15: PAT (Profit After Tax) = PBT - Tax
+   [Bottom line net profit]
+
+KEY FEATURES:
+
+A. AUTOMATIC GROWTH CALCULATION
+   All revenue years (Col E to J) use formula: =Previous Year × 1.125
+
+   Example:
+   - FY 2026-27 (Col E) = FY 2025-26 (Col D) × 1.125
+   - This cascades: Each year grows 12.5% over previous
+
+   To Change Growth Rate:
+   1. Go to Loan Summary Sheet
+   2. Change cell B16 to new growth rate (e.g., 1.15 for 15%)
+   3. Return to Financials sheet
+   4. Update formula in Col E: =D4*1.15
+   5. Copy formula across to Col J
+
+B. COST STRUCTURE
+   Costs are calculated as percentage of revenue
+   Formula: Cost = Revenue × Cost %
+
+   This assumes:
+   - Variable costs scale with revenue
+   - Fixed costs remain constant
+   - Efficiency remains stable
+
+   If cost % changes over time:
+   - Adjust each year's cost % individually
+   - Or create separate cost assumptions
+
+C. EBITDA ANALYSIS
+   EBITDA = Revenue - Operating Costs
+   Also called: Operating Profit or Earnings before Interest, Tax, Depreciation
+
+   Use this for:
+   - Cash flow analysis (add back depreciation)
+   - DSCR calculation (primary metric)
+   - Comparison with debt service obligations
+
+   Default assumption: 30% EBITDA margin
+   - Transport industry range: 18-25%
+   - If actual margin is different, update cost %
+
+D. DEPRECIATION TREATMENT
+   Fixed depreciation of Rs. 8L/year assumed for financed vehicle
+
+   Adjust if:
+   - Multiple assets financed (increase depreciation)
+   - Different asset useful lives (recalculate)
+   - Accelerated depreciation permitted (update rates)
+
+   Standard useful lives:
+   - Vehicles: 5-8 years
+   - Plant & Equipment: 10-15 years
+   - Building: 25-30 years
+
+SENSITIVITY ANALYSIS USING THIS SHEET:
+
+Scenario 1: Lower Revenue (Economic Downturn)
+- Change base revenue (D4) to lower amount
+- Watch how EBITDA, DSCR change
+- Verify DSCR remains >1.50x
+
+Scenario 2: Higher Costs (Input Price Inflation)
+- Increase cost % in Row 5 (e.g., from 70% to 75%)
+- See impact on EBITDA margin
+- Check if still meets covenants
+
+Scenario 3: Better Operational Efficiency
+- Reduce cost % (e.g., from 70% to 68%)
+- See profit improvement
+- Demonstrate capability of operational improvement
+
+================================================================================
+SHEET 4: DEBT SERVICE
+================================================================================
+
+Purpose: Loan amortization schedule showing year-wise debt repayment
+
+KEY COLUMNS:
+
+Col A: Year (Year 1 to Year 7)
+
+Col B: Opening Balance (Loan amount initially)
+- Year 1: Rs. 7,14,000
+- Year 2: Closing Balance from Year 1
+- Pattern: Decreases each year as principal paid down
+- Year 7: Should approach zero (Rs. ~5-10K remaining)
+
+Col C: Annual EMI (Fixed)
+- All years: Rs. 1,54,128 (= 12 × 12,844)
+- This remains constant throughout tenure
+- Formula: =Monthly_EMI × 12
+
+Col D: Principal Portion (Increases each year)
+- Year 1: Rs. 86,303 (Lower - more interest paid)
+- Year 7: Rs. 145,904 (Higher - more principal paid)
+- As interest decreases, principal increases
+- Formula: =Annual_EMI - Interest_Portion
+
+Col E: Interest Portion (Decreases each year)
+- Year 1: Rs. 67,825 (Higher at start)
+- Year 7: Rs. 8,124 (Lower at end)
+- Calculated on opening balance
+- Formula: =Opening_Balance × 0.095 (9.5% annual rate)
+
+Col F: Closing Balance (Decreases each year)
+- Year 1: Rs. 7,14,000 - Rs. 86,303 = Rs. 6,27,697
+- Year 2: Rs. 6,27,697 - Rs. 97,170 = Rs. 5,30,527
+- [Pattern continues until payoff]
+- Year 7: Should be zero or very small amount
+- Formula: =Opening_Balance - Principal_Paid
+
+Col G: Cumulative Principal Paid (Increases)
+- Tracks total principal repaid so far
+- Year 1: Rs. 86,303
+- Year 7: Rs. 7,14,000 (=Total Loan)
+- Formula: =Previous_Cumulative + Current_Principal
+
+Col H: Principal % of EMI
+- Percentage of EMI going toward principal
+- Year 1: ~56% (Principal / EMI)
+- Year 7: ~95% (Principal / EMI)
+- Shows shifting composition over time
+
+Col I: Interest % of EMI
+- Percentage of EMI going toward interest
+- Year 1: ~44%
+- Year 7: ~5%
+- Decreases as loan is repaid
+
+BOTTOM SUMMARY ROWS:
+
+Row after amortization:
+- TOTAL REPAYMENT: Rs. 10,78,896 (Sum of all annual EMIs)
+- TOTAL INTEREST PAID: Rs. 3,64,896 (Rs. 10,78,896 - Rs. 7,14,000)
+
+KEY INSIGHTS:
+
+1. Interest Front-Loading
+   - Early years: Majority of EMI is interest
+   - Later years: Majority of EMI is principal
+   - This is normal for reducing balance loans
+
+2. Interest vs. Principal Split
+   Year 1: 44% interest, 56% principal
+   Year 7: 5% interest, 95% principal
+
+   Borrower pays ~51% of principal as interest over 7 years
+
+3. Total Interest Cost
+   Rs. 3,64,896 represents the cost of borrowing
+   - This is 51% of original loan amount
+   - At 9.50% over 7 years, this is normal
+
+HOW TO USE FOR CASH FLOW:
+
+1. Interest Expense for Taxes:
+   Use Col E (Interest Portion) for tax deduction calculation
+
+2. Cash Flow Projection:
+   Use Col D (Principal) to calculate free cash flow available after debt service
+
+3. Refinancing Decision:
+   Track remaining balance (Col F) to assess early repayment options
+
+MONITORING USE:
+
+During loan tenor, use this sheet to:
+- Track actual vs. scheduled principal repayment
+- Verify interest calculations
+- Identify prepayment opportunities
+- Flag if borrower falls behind on schedule
+
+================================================================================
+SHEET 5: RATIOS & COVENANTS
+================================================================================
+
+Purpose: Key financial ratios and debt service covenant analysis
+
+SECTION 1: KEY PROFITABILITY RATIOS
+
+Row 3: Gross Profit Margin (%)
+Formula: ((Revenue - COGS) / Revenue) × 100
+Current: Links to Financials sheet
+- Shows profitability after direct costs
+- Expected range for transport: 18-22%
+
+Row 5: EBITDA Margin (%)
+Formula: (EBITDA / Revenue) × 100
+Current: = (D6 / D3) × 100
+- Primary metric for operations
+- Shows operational profit generation
+- Expected range for transport: 18-25%
+- Current assumption: 30%
+
+Row 7: Net Profit Margin (%)
+Formula: (PAT / Revenue) × 100
+Current: = (D11 / D3) × 100
+- Shows bottom-line profitability
+- After all expenses including interest & tax
+- Expected range: 8-12%
+
+SECTION 2: DEBT SERVICE RATIOS [CRITICAL]
+
+Row 11: Debt Service Coverage Ratio (DSCR) ✓✓✓ MOST IMPORTANT
+Formula: Annual EBITDA / Annual Debt Service Obligation
+Current: = D6 / (Annual EMI)
+Example: Rs. 168.75L / Rs. 1.54L = 109.5x
+
+Interpretation:
+- > 2.50x: Excellent credit (Low risk)
+- 1.50-2.50x: Good (Acceptable)
+- 1.00-1.50x: Marginal (Watch carefully)
+- < 1.00x: REJECT (Cannot service debt)
+
+Bank Requirement: Minimum 1.50x
+
+Current Status: EXCEPTIONAL (>10x is extraordinary)
+- This means borrower generates 10x the cash needed to pay EMI
+- Substantial buffer for business downturns
+- Very safe credit
+
+Row 13: Interest Coverage Ratio (ICR)
+Formula: EBIT / Annual Interest Expense
+Current: = D6 / (Annual Interest)
+- Shows how many times profit covers interest
+- Higher is better
+- Minimum acceptable: 2.50x
+- Current status: Exceptional
+
+Row 15: Loan to Value Ratio (LTV)
+Formula: Loan Amount / Annual Revenue
+Current: = 7.14 / (D3/100)
+- Shows loan size relative to business scale
+- Typical acceptable: < 50%
+- Current status: ~1.4% LTV (Excellent)
+
+SECTION 3: REPAYMENT CAPACITY ANALYSIS
+
+Row 19: Annual EMI
+- Total cash needed each year for loan repayment
+- Fixed at Rs. 1,54,128 for this loan
+
+Row 21: Annual EBITDA (Lakh)
+- Cash available from operations
+- Links to Financials sheet
+
+Row 23: Available for Debt Service (Lakh)
+- Theoretical cash after capex and working capital
+- Shows cushion for debt payment
+
+Row 25: Debt Service Capacity
+- Multiple calculated as EBITDA / Annual EMI
+- Shows how many times can service debt
+- Higher is safer
+
+MONITORING THESE RATIOS:
+
+During Loan Tenure:
+
+Monthly: Check if EMI paid on time (DSCR not needed monthly)
+
+Quarterly:
+- Recalculate DSCR with latest financial data
+- If DSCR < 2.00x: Flag for review
+- If DSCR < 1.50x: Activate covenant breach protocol
+
+Half-yearly:
+- Full ratio analysis
+- Trend analysis (improving or declining)
+- Compare with industry benchmarks
+- Trigger early warning if concerning
+
+Annually:
+- Complete rerating
+- Update projections
+- Covenant assessment
+- Refinancing opportunities evaluation
+
+COVENANT BREACHES:
+
+If DSCR drops below 1.50x:
+1. Immediate contact with borrower
+2. Request explanation and action plan
+3. Audit of financial statements
+4. Site visit to assess business condition
+5. Consider debt restructuring options
+6. May trigger demand for additional security
+
+Red Flag Scenarios (Trigger Special Review):
+- 2 consecutive quarters with DSCR < 1.75x
+- Single quarter DSCR < 1.50x
+- DSCR trending downward consistently
+- ICR drops below 2.00x
+- Margin compression > 5%
+
+================================================================================
+SHEET 6: CASH FLOW
+================================================================================
+
+Purpose: 7-year cash flow projection showing residual cash after debt service
+
+STRUCTURE:
+
+Row 3: Year Headers (FY 2026-27 to Terminal/Year 7)
+- Represents each year of loan tenure
+- All auto-calculated based on Financials sheet
+
+CASH FLOW COMPONENTS:
+
+Row 5: Operating Cash Flow (EBITDA)
+- Source: Links to Financials sheet Column D,E,F,G,H,I,J
+- Represents: Cash generated from core business operations
+- Growth: 12.5% year-on-year (matches Financials assumptions)
+
+Row 7: Less: Interest Expense
+- Source: Links to Debt Service sheet
+- Year 1: Rs. 6.78L (Year 1 interest from debt service)
+- Decreases each year (front-loaded interest)
+- No formula - manually link to avoid circular references
+
+Row 9: Less: Taxes
+- Source: Links to Financials sheet tax rows
+- Year 1: Approximately Rs. 40L (based on PBT of ~135L)
+- Accounts for tax liability
+- Can be adjusted if special tax treatment applies
+
+Row 11: Free Cash Flow Available (Key metric)
+- Calculation: EBITDA - Interest - Taxes
+- Shows cash available after operating expenses and taxes
+- What remains for debt principal and owner distribution
+
+Row 13: Less: Principal Repayment
+- Source: Links to Debt Service sheet Column D
+- Year 1: Rs. 8.63L (Principal portion of Year 1 EMI)
+- Increases each year
+- Essential for remaining solvent
+
+Row 15: Residual Cash Flow (Bottom line)
+- Calculation: Available - Principal
+- Shows cash left after all obligations
+- Year 1 onwards: Significantly positive in this scenario
+
+ANALYSIS INSIGHTS:
+
+1. Operating Cash Generation
+   - EBITDA grows from Rs. 168.75L (Yr 1) to Rs. 262.04L (Yr 7)
+   - Demonstrates growing cash generation capacity
+   - Supports comfortable debt servicing
+
+2. Cash Absorption for Debt Service
+   - Interest: Rs. 6.78L → Rs. 0.81L (decreasing)
+   - Principal: Rs. 8.63L → Rs. 14.59L (increasing)
+   - Total annual: ~Rs. 15.41L (consistent EMI)
+
+3. Residual Cash After All Obligations
+   - Year 1: ~Rs. 118.7L remaining
+   - Grows to ~Rs. 247L by Year 7
+   - Shows strong buffer for business needs and owner returns
+   - Demonstrates sustainable business model
+
+SCENARIOS TO ANALYZE:
+
+Scenario 1: Revenue Decline (Economic Downturn)
+- Reduce EBITDA by 20%
+- See if residual cash remains positive
+- Check if debt service obligations can still be met
+
+Scenario 2: Higher Tax Rate (Policy Change)
+- Increase tax % from 30% to 35%
+- Observe impact on residual cash
+- Understand tax sensitivity
+
+Scenario 3: Capex Requirements (Growth Investment)
+- Add row for capital expenditure needs
+- Deduct from residual cash
+- Plan if additional financing needed
+
+USING FOR BUSINESS PLANNING:
+
+1. Owner Distribution Planning
+   - Residual cash can be distributed to proprietor
+   - Sustainable distribution = 50-70% of residual
+   - Keep 30-50% as business reserve
+
+2. Growth Investment
+   - Use residual cash for business expansion
+   - Support additional vehicle purchases
+   - Invest in technology/efficiency
+
+3. Refinancing Assessment
+   - Check if cash sufficient for additional loan service
+   - Determine refinancing capacity
+   - Plan expansion finance
+
+4. Covenant Monitoring
+   - Track if residual cash remains positive
+   - Flag if becomes negative (unsustainable)
+   - Identify when cash becomes tight
+
+================================================================================
+HOW TO CUSTOMIZE THE WORKBOOK
+================================================================================
+
+STEP 1: UPDATE BASE REVENUE
+File: Loan Summary & Financials Sheet
+Action: Update FY 2025-26 revenue with actual data
+Cell: D3 (Financials sheet)
+Expected: Enter actual gross revenue in Lakh rupees
+
+STEP 2: ADJUST COST ASSUMPTIONS
+File: Financials Sheet
+Action: Update cost of operations percentage if different from 70%
+Cell: B5 (Default 70%)
+Range: 65-75% for transport sector
+
+STEP 3: VERIFY DEPRECIATION
+File: Financials Sheet
+Action: Update depreciation amount if different
+Cell: B9 (Default Rs. 8L)
+Calculation: Asset Value / Useful Life
+
+STEP 4: ADJUST TAX RATE (If applicable)
+File: Financials Sheet
+Action: Change tax rate if different from 30%
+Location: Row 14 formula
+Note: Some sectors have special tax regimes
+
+STEP 5: UPDATE GROWTH RATE (If different view)
+File: Loan Summary
+Action: Change annual growth assumption
+Cell: B16 (Default 12.5%)
+Impact: All projection columns auto-update
+
+STEP 6: LINK INTEREST EXPENSE (For complete analysis)
+File: Financials Sheet, Row 12
+Action: Link to actual interest from Debt Service sheet
+Formula: ='Debt Service'!E[row]
+Note: Creates circular reference - keep as manual entries
+
+STEP 7: ADD SPECIFIC COVENANTS
+File: Appraisal Summary
+Action: Customize Loan Covenants section
+Note: Modify based on actual loan agreement terms
+
+STEP 8: UPDATE MONITORING THRESHOLDS
+File: Ratios & Covenants
+Action: Change minimum thresholds if bank policy different
+Location: Column C (Acceptable benchmarks)
+
+================================================================================
+IMPORTANT NOTES ON FORMULAS
+================================================================================
+
+1. ALL FORMULAS USE RELATIVE REFERENCES
+   - When you change base revenue, all projections update
+   - When you change growth rate, all years recalculate
+   - This is by design for ease of sensitivity analysis
+
+2. DO NOT DELETE COLUMNS
+   - Each column represents a year
+   - Deletion breaks formulas in other sheets
+   - If you want fewer years, hide columns instead
+
+3. CIRCULAR REFERENCES AVOIDED
+   - Interest in Financials sheet not linked to Debt Service
+   - This would create circular calculation
+   - Keep as static values or manually update
+
+4. COPY FORMULAS CAREFULLY
+   - If extending projections beyond 7 years, copy formulas
+   - Ensure column letters auto-increment
+   - Test at least 2 rows to verify
+
+5. BACKUP ORIGINAL
+   - Keep original copy unchanged
+   - Save analysis version separately
+   - Allows comparison between scenarios
+
+================================================================================
+TROUBLESHOOTING COMMON ISSUES
+================================================================================
+
+Issue 1: "Circular Reference" error
+Cause: Usually from linking Interest to Debt Service sheet
+Fix: Keep Interest as manual entry in Financials sheet
+
+Issue 2: Formulas showing as text (#VALUE! error)
+Cause: Cell formatted as text instead of number
+Fix: Right-click → Format Cells → Choose Number format
+
+Issue 3: Growth not applying to all years
+Cause: Formula not copied to all columns
+Fix: Select formula cell, copy, paste to remaining years
+
+Issue 4: DSCR calculation incorrect
+Cause: Wrong row reference in formula
+Fix: Verify formula references correct EBITDA and EMI rows
+
+Issue 5: Column widths too narrow for data
+Cause: Auto-fit not applied
+Fix: Double-click column border to auto-fit
+
+Issue 6: Charts not updating
+Cause: Chart not linked to dynamic range
+Fix: Delete and recreate chart with proper range
+
+================================================================================
+FINAL CHECKLIST BEFORE APPROVAL
+================================================================================
+
+Before using this CMA for approval decision:
+
+☑ All base financial data entered and verified
+☑ Growth assumptions agreed with borrower
+☑ Cost structure realistic and benchmarked
+☑ DSCR calculated and > 1.50x confirmed
+☑ Interest Coverage > 2.50x verified
+☑ LTV < 50% confirmed (for asset-based loans)
+☑ All projections stress-tested
+☑ Covenants clearly defined
+☑ Collateral valued and security documented
+☑ Monitoring plan established
+☑ Early warning signals identified
+☑ All sheets reviewed by credit officer
+☑ Ready for approval authority signature
+
+================================================================================
+This guide is comprehensive but flexible. Customize based on your bank's
+policies, borrower-specific conditions, and sector requirements.
+================================================================================
