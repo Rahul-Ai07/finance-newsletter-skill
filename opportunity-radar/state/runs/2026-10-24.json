@@ -14,10 +14,12 @@
     {"segment": "S5_MAHARASHTRA_STATE_UNDERTAKINGS", "name": "Search: MIDC, MSEDCL, MahaGenco deputation (1)", "url": "", "result": "ok (search snippets only)"},
     {"segment": "S6_PRIVATE_BANKS_UCB", "name": "Search: five private banks; UCB anchors; Maharashtra UCB GM (3)", "url": "", "result": "ok (search snippets only)"},
     {"segment": "S7_INTERNATIONAL_DEV_FINANCE", "name": "Search: World Bank, IMF, ADB, AIIB, IFC (3)", "url": "", "result": "ok (search snippets only)"},
-    {"segment": "S8_UN_GLOBAL_AGENCIES", "name": "Search: WHO, UNDP, UNICEF, ILO (2)", "url": "", "result": "ok (search snippets only)"}
+    {"segment": "S8_UN_GLOBAL_AGENCIES", "name": "Search: WHO, UNDP, UNICEF, ILO (2)", "url": "", "result": "ok (search snippets only)"},
+    {"segment": "S1_BANKING_FI", "name": "Search: IBDIC director and recruitment (2), added after user screenshot", "url": "", "result": "ok (search snippets only, no IBDIC notice found)"},
+    {"segment": "S1_BANKING_FI", "name": "IBDIC application portal, seen in user screenshot", "url": "https://app1.factohr.com", "result": "unreachable_dns"}
   ],
   "coverage": {
-    "S1_BANKING_FI": "NOT VERIFIED. Official sites blocked (403). Search only. No 2026 AGM, DGM or lateral notice surfaced.",
+    "S1_BANKING_FI": "NOT VERIFIED. Official sites blocked (403). Search only. No 2026 AGM, DGM or lateral notice surfaced. The IBDIC Director posting is known only from the user's screenshot. Its application portal does not resolve from this environment.",
     "S2_REGULATORS_GOVT_FINANCE": "NOT VERIFIED. DFS and IBBI sites blocked (403). Search only.",
     "S3_RECOVERY_TRIBUNALS": "NOT VERIFIED. Circular text not read. Search snippets only.",
     "S4_CENTRAL_PSU": "PARTIAL. DFCCIL blocked. Search only, via aggregator.",
@@ -27,6 +29,21 @@
     "S8_UN_GLOBAL_AGENCIES": "PARTIAL. No open senior India-based role surfaced. Official sites not attempted."
   },
   "findings": [
+    {
+      "segment": "S1_BANKING_FI",
+      "institution": "IBDIC (Indian Banks' Digital Infrastructure Company)",
+      "official_title": "Director, Ecosystem Partnerships and Growth",
+      "advertisement_number": "",
+      "employment_type": "UNKNOWN (portal form; mode not shown)",
+      "location": "Mumbai",
+      "status": "UNVERIFIED",
+      "deadline": null,
+      "source_url": "https://app1.factohr.com",
+      "verified": false,
+      "eligibility_verdict": "ELIGIBILITY UNCONFIRMED (no criteria visible in the screenshot)",
+      "match_tier": "NOT SCORED",
+      "notes": "User screenshot taken at 06:53 on the phone: application form open, with a resume upload and personal-detail fields. IBDIC logo. Place of posting Mumbai. The screenshot shows no closing date, qualifications or mode. The portal does not resolve from this environment, and two searches found no IBDIC notice. The RBI has warned of fake appointment letters from look-alike domains, so confirm on IBDIC's official site before uploading documents."
+    },
     {
       "segment": "S4_CENTRAL_PSU",
       "institution": "DFCCIL",
@@ -225,13 +242,14 @@
   ],
   "priority_actions": [
     "DFCCIL GM (Finance) deputation: confirm the closing date on dfccil.com. If a 30-day window from 28 Sep 2026 applies, it closes about 28 Oct 2026.",
-    "DRT Presiding Officer circular: read the official PDF for the deadline and eligibility clause. The judicial and ILS-cadre restriction is likely to exclude PSB officers, so confirm before effort.",
-    "MSEDCL Director (Finance), Advt. 10/2026: get the closing date from the PDF and check the CA, MBA Finance, ICWA or CFA clause against the candidate's profile."
+    "IBDIC Director, Ecosystem Partnerships and Growth (Mumbai): an application form is open in the user's screenshot. Confirm the posting, closing date and eligibility on IBDIC's official site before uploading any documents.",
+    "DRT Presiding Officer circular: read the official PDF for the deadline and eligibility clause. The judicial and ILS-cadre restriction is likely to exclude PSB officers, so confirm before effort."
   ],
   "limitations": [
     "Every official host attempted (financialservices.gov.in, sbi.co.in, ibbi.gov.in, dfccil.com) was denied by the environment network policy with 403. Every record here comes from search snippets and aggregators, so all are UNVERIFIED.",
     "Aggregator dates conflict in places (IBBI Executive Director notice date; DRT Presiding Officer post count). They are shown as stated and not reconciled.",
     "Not searched in this pilot: IFC, NDB, BIS, FSB, FATF, OECD, GCF and GEF career pages, the five private banks' career pages, and MIDC beyond one query.",
-    "Eligibility verdicts are provisional. Total years of service, AI leadership and deputation rules are not established (skill section 2)."
+    "Eligibility verdicts are provisional. Total years of service, AI leadership and deputation rules are not established (skill section 2).",
+    "IBDIC: the screenshot shows an open application for a Director post in Mumbai. Two searches found no official notice. The portal does not resolve from this environment, so the closing date, eligibility and mode are unknown."
   ]
 }

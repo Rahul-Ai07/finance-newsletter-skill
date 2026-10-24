@@ -20,7 +20,7 @@ Find **currently open, professionally relevant, realistically eligible** opportu
 
 **Critical learning:** A user-discovered SBI DGM–AI advertisement was missed in a prior scan. Prevent recurrence by searching **both advertisements and individual role titles**, including AGM, DGM, GM, Chief, Head, Lead, Specialist, Advisor, Programme Manager, Risk Officer and AI Governance. Inspect every active recruitment PDF for *all posts in the advertisement*, including separate advertisements and addenda. Do not assert that a post exists, is open, or is eligible without checking its official notice.
 
-**Scope interpretation (v3):** "IBDIC" in the original request is read as **IBBI** (Insolvency and Bankruptcy Board of India). IDBI Bank and DICGC are also covered under S1 so nothing is lost if the intended body was one of those. Confirm the reading with the user and change `config/segments.json` if it was different.
+**Scope interpretation (v3):** "IBDIC" means **Indian Banks' Digital Infrastructure Company**. The user confirmed this from the logo on a live application page. It is not IBBI. **IBBI** (Insolvency and Bankruptcy Board of India) is covered separately under S2. IDBI Bank and DICGC are also covered under S1.
 
 ## 2. Candidate profile — confirmed vs unknown
 
@@ -46,7 +46,7 @@ The three original **search slots** are kept. Each slot contains one or more **i
 
 ### SLOT 1 — Indian public sector, government and tribunals
 
-**Core:** SBI and every Indian public sector bank; IDBI; RBI; NABARD; SIDBI; NHB; IIFCL; CGTMSE; CERSAI; SEBI; IBA; FSIB; DFS/Ministry of Finance; NITI Aayog; IBBI; Enforcement Directorate; DRT/DRAT; central and state PSUs and government undertakings; other relevant public finance, regulation, development, governance and investigative bodies.
+**Core:** SBI and every Indian public sector bank; IDBI; IBDIC; RBI; NABARD; SIDBI; NHB; IIFCL; CGTMSE; CERSAI; SEBI; IBA; FSIB; DFS/Ministry of Finance; NITI Aayog; IBBI; Enforcement Directorate; DRT/DRAT; central and state PSUs and government undertakings; other relevant public finance, regulation, development, governance and investigative bodies.
 
 **Targets:** AGM, DGM, GM, Director, Executive Director, equivalent senior specialist, deputation, Registrar/Assistant Registrar/Recovery Officer, chief risk/compliance, financial inclusion, agricultural/MSME credit, credit monitoring, NPA resolution, transformation and AI governance. Treat tribunal/judicial appointments and investigative posts as *eligibility-sensitive*, not assumed accessible to PSB officers. Board-level PSU posts (Director Finance, Executive Director) usually carry a stated years-of-experience and qualification clause; read it exactly.
 
@@ -74,7 +74,7 @@ Each segment is configured in `opportunity-radar/config/segments.json` with its 
 
 | ID | Industry segment | Slot | Examples |
 |---|---|---|---|
-| S1 | Banking and financial institutions (public sector) | 1 | SBI, IDBI Bank, PSBs, RBI, NABARD, SIDBI, EXIM, IIFCL, NaBFID, HUDCO, IREDA, PFC, REC, NHB, DICGC, CERSAI, CGTMSE |
+| S1 | Banking and financial institutions (public sector) | 1 | SBI, IDBI Bank, IBDIC, PSBs, RBI, NABARD, SIDBI, EXIM, IIFCL, NaBFID, HUDCO, IREDA, PFC, REC, NHB, DICGC, CERSAI, CGTMSE |
 | S2 | Regulators and government finance | 1 | DFS / Ministry of Finance, SEBI, IRDAI, PFRDA, IBBI, NITI Aayog, IBA, FSIB, NPCI |
 | S3 | Recovery, insolvency and tribunals | 1 | DRT and DRAT (via DFS circulars), NCLT and NCLAT, asset reconstruction companies |
 | S4 | Central PSUs and government undertakings | 1 | Railway PSUs (RVNL, DFCCIL, CONCOR, HRIDC), HMT, energy and infrastructure CPSEs, LIC, defence PSUs |
@@ -111,7 +111,7 @@ Run **separate keyword families** within each segment, not one broad query. Fami
 
 1. **Primary:** official institution careers page, original PDF, corrigendum, application portal and official HR contact.
 2. **Secondary:** verified employer-hosted job listing or authoritative government vacancy index.
-3. **Discovery only:** job aggregators, newspapers, social media and reposts; follow through to official source before calling a vacancy confirmed.
+3. **Discovery only:** job aggregators, newspapers, social media and reposts; follow through to official source before calling a vacancy confirmed. Application portals run by third parties (for example FactoHR) are not official sources. Confirm the posting on the employer's own site, and check the domain. The RBI has warned of fake appointment letters sent from look-alike domains.
 
 Capture: exact title; advert/reference number; institution; segment; slot; posting location; mode; pay/grade if published; opening date; deadline **with timezone**; cutoff date; mandatory education (including accepted branches); essential experience and leadership years; desirable credentials; age limits/relaxations; deputation cadre-equivalence rules; application route; documents; fee; official deep link; PDF link; last verified timestamp; status.
 

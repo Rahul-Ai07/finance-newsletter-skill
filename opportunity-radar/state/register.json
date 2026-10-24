@@ -2,6 +2,28 @@
   "schema_version": "3.0.0",
   "last_run_date": "2026-10-24",
   "vacancies": {
+    "ibdic-indian-banks-digital-infrastructure-company--none--director-ecosystem-partnerships-and-growth": {
+      "vacancy_id": "ibdic-indian-banks-digital-infrastructure-company--none--director-ecosystem-partnerships-and-growth",
+      "segment": "S1_BANKING_FI",
+      "institution": "IBDIC (Indian Banks' Digital Infrastructure Company)",
+      "official_title": "Director, Ecosystem Partnerships and Growth",
+      "advertisement_number": "",
+      "employment_type": "UNKNOWN (portal form; mode not shown)",
+      "location": "Mumbai",
+      "status": "UNVERIFIED",
+      "deadline": null,
+      "deadline_timezone": "IST",
+      "source_url": "https://app1.factohr.com",
+      "verified": false,
+      "eligibility_verdict": "ELIGIBILITY UNCONFIRMED (no criteria visible in the screenshot)",
+      "score": null,
+      "match_tier": "NOT SCORED",
+      "notes": "User screenshot taken at 06:53 on the phone: application form open, with a resume upload and personal-detail fields. IBDIC logo. Place of posting Mumbai. The screenshot shows no closing date, qualifications or mode. The portal does not resolve from this environment, and two searches found no IBDIC notice. The RBI has warned of fake appointment letters from look-alike domains, so confirm on IBDIC's official site before uploading documents.",
+      "change_type": "NEW",
+      "first_seen": "2026-10-24",
+      "previous_status": null,
+      "last_seen": "2026-10-24"
+    },
     "dfccil--none--general-manager-finance-corporate-office-noida-on-deputation": {
       "vacancy_id": "dfccil--none--general-manager-finance-corporate-office-noida-on-deputation",
       "segment": "S4_CENTRAL_PSU",

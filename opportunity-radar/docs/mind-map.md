@@ -22,7 +22,7 @@ mindmap
       Commit to branch
     Segments
       S1 Public sector banks and FIs
-        SBI, IDBI, PSBs
+        SBI, IDBI, IBDIC, PSBs
         RBI, NABARD, SIDBI, EXIM
         DICGC, CERSAI, CGTMSE
       S2 Regulators and government finance
