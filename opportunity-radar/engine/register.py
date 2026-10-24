@@ -22,10 +22,14 @@ REPORTS = ROOT / "reports"
 SEGMENTS = ROOT / "config" / "segments.json"
 SCHEDULE = ROOT / "config" / "schedule.json"
 
+# LISTED: on the institution's current official listing, but its deadline was not read.
 STATUSES = {
-    "VERIFIED OPEN", "UPCOMING", "CLOSING SOON", "CLOSED",
+    "VERIFIED OPEN", "LISTED", "UPCOMING", "CLOSING SOON", "CLOSED",
     "SELECTION IN PROGRESS", "WITHDRAWN", "UNVERIFIED",
 }
+# OFFICIAL_DIRECT: page or PDF opened. OFFICIAL_INDEXED: official text returned by a
+# search restricted to the institution's own domain. AGGREGATOR / USER_PROVIDED: not verified.
+CONFIDENCE_LEVELS = {"OFFICIAL_DIRECT", "OFFICIAL_INDEXED", "AGGREGATOR", "USER_PROVIDED"}
 CLOSED_STATES = {"CLOSED", "WITHDRAWN"}
 TRACKED_FIELDS = ("status", "deadline", "eligibility_verdict", "score")
 
@@ -73,6 +77,8 @@ def normalise(finding, run_date):
         "deadline_timezone": finding.get("deadline_timezone", "IST"),
         "source_url": finding.get("source_url", ""),
         "verified": bool(finding.get("verified", False)),
+        "source_confidence": finding.get(
+            "source_confidence", "OFFICIAL_DIRECT" if finding.get("verified") else "AGGREGATOR"),
         "eligibility_verdict": finding.get("eligibility_verdict", "ELIGIBILITY UNCONFIRMED"),
         "score": finding.get("score"),
         "match_tier": finding.get("match_tier", "NOT SCORED"),
@@ -80,9 +86,15 @@ def normalise(finding, run_date):
     }
     if entry["status"] not in STATUSES:
         raise ValueError(f"unknown status {entry['status']!r} for {entry['vacancy_id']}")
+    if entry["source_confidence"] not in CONFIDENCE_LEVELS:
+        raise ValueError(f"unknown source_confidence {entry['source_confidence']!r} for {entry['vacancy_id']}")
+    if entry["verified"] and entry["source_confidence"] not in {"OFFICIAL_DIRECT", "OFFICIAL_INDEXED"}:
+        raise ValueError(f"{entry['vacancy_id']} is marked verified from a non-official source")
     if not entry["verified"]:
         entry["status"] = "UNVERIFIED"
-    elif entry["status"] == "VERIFIED OPEN" and entry["deadline"] and date.fromisoformat(entry["deadline"]) < run_date:
+    elif entry["status"] == "VERIFIED OPEN" and not entry["deadline"]:
+        entry["status"] = "LISTED"
+    elif entry["status"] == "VERIFIED OPEN" and date.fromisoformat(entry["deadline"]) < run_date:
         entry["status"] = "CLOSED"
     return entry
 
@@ -135,11 +147,19 @@ def render(run, changes, run_date, segments):
         f"# Opportunity Watch: {run_date:%d %b %Y}, IST",
         "",
         f"Gate: {run.get('gate', 'scan day')} · Sources attempted: {len(checked)} · "
-        f"Blocked by network policy: {len(blocked)} · Live records: {len(live)}",
+        f"Blocked by network policy: {len(blocked)} · Live records: {len(live)} · "
+        f"From official sources: {sum(1 for c in live if c['verified'])}",
         "",
-        "## Changes since previous scan",
+        "## Verified open now",
         "",
     ]
+    open_now = [c for c in live if c["status"] == "VERIFIED OPEN"]
+    lines += [
+        f"- **{c['institution']} — {c['official_title']}** · closes {c['deadline']} {c['deadline_flag'] or ''} · "
+        f"{c['eligibility_verdict']} · [official source]({c['source_url']})"
+        for c in open_now
+    ] or ["None in the sources checked."]
+    lines += ["", "## Changes since previous scan", ""]
     moved = [change for change in changes if change["change_type"] != "NO CHANGE"]
     if moved:
         lines += ["| Change | Institution — post | Deadline | Flag | Status |", "|---|---|---|---|---|"]
@@ -168,7 +188,7 @@ def render(run, changes, run_date, segments):
                 f"- **{row['institution']} — {row['official_title']}** · {row['employment_type']} · "
                 f"{row['location'] or 'location not stated'} · {row['status']} · deadline "
                 f"{row['deadline'] or 'not stated'} {row['deadline_flag'] or ''} · {row['eligibility_verdict']} · "
-                f"_{row['change_type']}_ · [source]({row['source_url'] or '#'})"
+                f"_{row['change_type']}_ · [source: {row.get('source_confidence', 'UNSPECIFIED')}]({row['source_url'] or '#'})"
             )
         lines.append("")
 

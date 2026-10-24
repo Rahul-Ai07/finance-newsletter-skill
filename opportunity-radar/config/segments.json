@@ -25,11 +25,13 @@
       "seed_queries": ["SBI AGM DGM recruitment notification {year}", "NABARD SIDBI EXIM deputation AGM DGM {year}", "IDBI Bank DICGC senior officer deputation {year}", "IBDIC Indian Banks Digital Infrastructure Company director {year}", "SIDBI ECGC IFCI IRFC NaBFID deputation AGM DGM {year}"],
       "sources": [
         {"name": "DFS vacancies index", "url": "https://financialservices.gov.in/index.php/vacancies", "kind": "official_index", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
-        {"name": "SBI current openings", "url": "https://sbi.co.in/web/careers/current-openings", "kind": "official_careers", "provenance": "skill_file", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "SBI current openings", "url": "https://sbi.bank.in/web/careers/current-openings", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
         {"name": "NABARD", "url": "https://www.nabard.org", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
         {"name": "SIDBI", "url": "https://www.sidbi.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
         {"name": "EXIM Bank", "url": "https://www.eximbankindia.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
-        {"name": "IDBI Bank", "url": "https://www.idbibank.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "IDBI Bank", "url": "https://www.idbi.bank.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "IIFCL", "url": "https://www.iifcl.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "National Housing Bank", "url": "https://www.nhb.org.in/oppurtunitiesnhb/", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
         {"name": "IBDIC application portal (third-party, seen in user screenshot)", "url": "https://app1.factohr.com", "kind": "application_portal", "provenance": "user_screenshot", "last_attempt": {"date": "2026-10-24", "result": "unreachable_dns"}},
         {"name": "IBDIC official website", "url": "http://ibdic.in", "kind": "official_careers", "provenance": "user_supplied", "last_attempt": {"date": "2026-10-24", "result": "dns_unresolved"}},
         {"name": "ECGC", "url": "https://www.ecgc.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}},
@@ -72,7 +74,7 @@
       "covers": ["Railway PSUs (RVNL, DFCCIL, CONCOR, HRIDC)", "HMT", "Energy and infrastructure CPSEs", "LIC", "Defence PSUs", "Other CPSEs"],
       "seed_queries": ["PSU deputation general manager finance risk {year}", "GM Finance deputation notification {year} India PSU", "Chief Risk Officer PSU deputation {year}"],
       "sources": [
-        {"name": "DFCCIL", "url": "https://www.dfccil.com", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "DFCCIL deputation listing", "url": "https://dfccil.com/Carrer/index?Id=3", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403; indexed_ok"}},
         {"name": "PSU Connect (discovery only)", "url": "https://www.psuconnect.in", "kind": "aggregator", "provenance": "search_result", "last_attempt": null},
         {"name": "TrueJobs (discovery only)", "url": "https://truejobs.co.in", "kind": "aggregator", "provenance": "search_result", "last_attempt": null}
       ]

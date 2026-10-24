@@ -71,6 +71,7 @@ This updates `state/register.json` and writes `reports/2026-10-24.md`.
       "deadline": "2026-11-09",
       "source_url": "https://…",
       "verified": false,
+      "source_confidence": "AGGREGATOR",
       "eligibility_verdict": "ELIGIBILITY UNCONFIRMED",
       "match_tier": "NOT SCORED",
       "notes": "…"
@@ -85,7 +86,8 @@ Rules the engine enforces:
 
 - `vacancy_id` = institution + advertisement number + post title. An AGM and a DGM in one advertisement are separate records.
 - `verified: false` forces `status: UNVERIFIED`. Nothing is `VERIFIED OPEN` without an official source.
-- A verified `VERIFIED OPEN` record whose deadline has passed becomes `CLOSED`.
+- `source_confidence` is `OFFICIAL_DIRECT`, `OFFICIAL_INDEXED`, `AGGREGATOR` or `USER_PROVIDED`. Only the two official levels may be `verified: true`.
+- A verified `VERIFIED OPEN` record with no deadline becomes `LISTED`. One whose deadline has passed becomes `CLOSED`.
 - A stored open record missing from this run becomes `NEEDS VERIFICATION`, or `CLOSED` if its deadline has passed.
 - `REOPENED`, `UPDATED`, `NO CHANGE` and `NEW` follow from comparing with the register.
 - `URGENT` means a deadline within `alerts.urgent_days` (3). `CLOSING SOON` means within `alerts.closing_soon_days` (7). Both are date-precision.

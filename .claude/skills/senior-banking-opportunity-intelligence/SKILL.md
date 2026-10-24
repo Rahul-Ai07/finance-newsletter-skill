@@ -1,6 +1,6 @@
 ---
 name: senior-banking-opportunity-intelligence
-version: 3.0.0
+version: 3.1.0
 description: >-
   Search, verify, rank and monitor senior opportunities for an Indian banker across
   public-sector banks and financial institutions, DFS and DRT/DRAT deputation circulars,
@@ -50,7 +50,7 @@ The three original **search slots** are kept. Each slot contains one or more **i
 
 **Targets:** AGM, DGM, GM, Director, Executive Director, equivalent senior specialist, deputation, Registrar/Assistant Registrar/Recovery Officer, chief risk/compliance, financial inclusion, agricultural/MSME credit, credit monitoring, NPA resolution, transformation and AI governance. Treat tribunal/judicial appointments and investigative posts as *eligibility-sensitive*, not assumed accessible to PSB officers. Board-level PSU posts (Director Finance, Executive Director) usually carry a stated years-of-experience and qualification clause; read it exactly.
 
-**SBI special protocol:** Search the SBI official current-openings page and its downloadable advertisements, detailed notices, corrigenda and application portals. Independently search for **AGM**, **DGM**, **AI**, **analytics**, **risk**, **compliance**, **governance**, **digital**, **data**, **model risk**, **credit**, **technology** and **specialist cadre**. Enumerate every role within a multi-post notice; distinguish contract from regular; confirm age cutoff, accepted engineering disciplines, minimum years in relevant domain, mandatory AI leadership and evidence of projects. Cross-check advert number, opening and closing dates, and revisions. Never infer AGM from a DGM advertisement or vice versa.
+**SBI special protocol:** Search the SBI official current-openings page (https://sbi.bank.in/web/careers/current-openings) and its downloadable advertisements, detailed notices, corrigenda and application portals. Independently search for **AGM**, **DGM**, **AI**, **analytics**, **risk**, **compliance**, **governance**, **digital**, **data**, **model risk**, **credit**, **technology** and **specialist cadre**. Enumerate every role within a multi-post notice; distinguish contract from regular; confirm age cutoff, accepted engineering disciplines, minimum years in relevant domain, mandatory AI leadership and evidence of projects. Cross-check advert number, opening and closing dates, and revisions. Never infer AGM from a DGM advertisement or vice versa.
 
 ### SLOT 2 — International, multilateral and UN
 
@@ -115,7 +115,9 @@ Run **separate keyword families** within each segment, not one broad query. Fami
 
 Capture: exact title; advert/reference number; institution; segment; slot; posting location; mode; pay/grade if published; opening date; deadline **with timezone**; cutoff date; mandatory education (including accepted branches); essential experience and leadership years; desirable credentials; age limits/relaxations; deputation cadre-equivalence rules; application route; documents; fee; official deep link; PDF link; last verified timestamp; status.
 
-A vacancy is `VERIFIED OPEN` only when the official application window is current **and** the posting has not been withdrawn/filled. Other statuses: `UPCOMING`, `CLOSING SOON`, `CLOSED`, `SELECTION IN PROGRESS`, `WITHDRAWN`, `UNVERIFIED`. Do not mistake a list of vacancies anticipated up to a date for an application deadline; read the application-submission clause separately.
+A vacancy is `VERIFIED OPEN` only when the official application window is current **and** the posting has not been withdrawn/filled. Other statuses: `LISTED` (on the institution's current official listing, deadline not read), `UPCOMING`, `CLOSING SOON`, `CLOSED`, `SELECTION IN PROGRESS`, `WITHDRAWN`, `UNVERIFIED`. Do not mistake a list of vacancies anticipated up to a date for an application deadline; read the application-submission clause separately.
+
+**Source confidence (v3.1):** every record carries `source_confidence`: `OFFICIAL_DIRECT` (page or PDF opened), `OFFICIAL_INDEXED` (official text returned by a search restricted to the institution's own domain, with the official URL), `AGGREGATOR` or `USER_PROVIDED`. Only the two official levels may set `verified: true`. When a direct fetch fails, run WebSearch with `allowed_domains` set to the official domain before falling back to aggregators. Indian banks now use `.bank.in` domains (for example sbi.bank.in, idbi.bank.in); search both old and new domains.
 
 **Blocked sources (v3 rule):** If an official host refuses the connection (for example, a 403 from the environment network policy), record `blocked_403` for that source, mark every affected record `UNVERIFIED`, and mark the segment `NOT VERIFIED`. Never report a blocked segment as "no openings". Name the blocked host in the digest so the user can allow it in environment settings.
 

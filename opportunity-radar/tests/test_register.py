@@ -88,6 +88,20 @@ class MergeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             register.merge(fresh_register(), {"findings": [finding(status="MAYBE")]}, RUN, ALERTS)
 
+    def test_verified_open_without_deadline_is_listed(self):
+        changes = register.merge(fresh_register(), {"findings": [finding(deadline=None)]}, RUN, ALERTS)
+        self.assertEqual(changes[0]["status"], "LISTED")
+
+    def test_source_confidence_defaults(self):
+        reg = fresh_register()
+        register.merge(reg, {"findings": [finding(), finding(official_title="AGM", verified=False)]}, RUN, ALERTS)
+        levels = sorted(v["source_confidence"] for v in reg["vacancies"].values())
+        self.assertEqual(levels, ["AGGREGATOR", "OFFICIAL_DIRECT"])
+
+    def test_aggregator_cannot_be_marked_verified(self):
+        with self.assertRaises(ValueError):
+            register.merge(fresh_register(), {"findings": [finding(source_confidence="AGGREGATOR")]}, RUN, ALERTS)
+
 
 class DeadlineFlagTests(unittest.TestCase):
     def test_flags(self):
