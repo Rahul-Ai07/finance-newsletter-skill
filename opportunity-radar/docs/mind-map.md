@@ -67,16 +67,8 @@ mindmap
       Aggregators are discovery only
       Blocked host means NOT VERIFIED
       Never convert blocked to no openings
-    Fit assessment
-      Gate A hard disqualifiers
-      Gate B equivalence and ambiguity
-      Gate C experience fit
-      Gate D opportunity value
-      Score out of 100 after gates
-    Candidate profile
-      Scale IV, 8 years
-      CAIIB, MBA Business Analytics
-      SARFAESI and DRT recovery
-      Outskill AI certificates
-      Mumbai first, deputation first
+    Output
+      Facts only, from official sources
+      Criteria quoted as published
+      GitHub report, board, email and push
 ```
