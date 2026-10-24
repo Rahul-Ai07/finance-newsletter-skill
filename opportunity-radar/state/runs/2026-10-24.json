@@ -16,10 +16,13 @@
     {"segment": "S7_INTERNATIONAL_DEV_FINANCE", "name": "Search: World Bank, IMF, ADB, AIIB, IFC (3)", "url": "", "result": "ok (search snippets only)"},
     {"segment": "S8_UN_GLOBAL_AGENCIES", "name": "Search: WHO, UNDP, UNICEF, ILO (2)", "url": "", "result": "ok (search snippets only)"},
     {"segment": "S1_BANKING_FI", "name": "Search: IBDIC director and recruitment (2), added after user screenshot", "url": "", "result": "ok (search snippets only, no IBDIC notice found)"},
-    {"segment": "S1_BANKING_FI", "name": "IBDIC application portal, seen in user screenshot", "url": "https://app1.factohr.com", "result": "unreachable_dns"}
+    {"segment": "S1_BANKING_FI", "name": "IBDIC application portal, seen in user screenshot", "url": "https://app1.factohr.com", "result": "unreachable_dns"},
+    {"segment": "S1_BANKING_FI", "name": "IBDIC official site, supplied by user", "url": "http://ibdic.in", "result": "unreachable_dns"},
+    {"segment": "S1_BANKING_FI", "name": "SIDBI careers", "url": "https://www.sidbi.in", "result": "blocked_403"},
+    {"segment": "S1_BANKING_FI", "name": "Search: SIDBI, ECGC, IFCI, IRFC, NaBFID, NCGTC senior and deputation (1)", "url": "", "result": "ok (search snippets only; 2026 notices found were closed or junior)"}
   ],
   "coverage": {
-    "S1_BANKING_FI": "NOT VERIFIED. Official sites blocked (403). Search only. No 2026 AGM, DGM or lateral notice surfaced. The IBDIC Director posting is known only from the user's screenshot. Its application portal does not resolve from this environment.",
+    "S1_BANKING_FI": "NOT VERIFIED. Official sites blocked (403). Search only. No 2026 AGM, DGM or lateral notice surfaced. The IBDIC Director posting is known only from the user's screenshot. Its application portal and the official IBDIC site, http://ibdic.in, do not resolve from this environment. SIDBI's site is blocked by policy. A 2026 SIDBI listing found in search (last date 18 Mar 2026) was junior and closed.",
     "S2_REGULATORS_GOVT_FINANCE": "NOT VERIFIED. DFS and IBBI sites blocked (403). Search only.",
     "S3_RECOVERY_TRIBUNALS": "NOT VERIFIED. Circular text not read. Search snippets only.",
     "S4_CENTRAL_PSU": "PARTIAL. DFCCIL blocked. Search only, via aggregator.",
@@ -38,11 +41,11 @@
       "location": "Mumbai",
       "status": "UNVERIFIED",
       "deadline": null,
-      "source_url": "https://app1.factohr.com",
+      "source_url": "http://ibdic.in",
       "verified": false,
       "eligibility_verdict": "ELIGIBILITY UNCONFIRMED (no criteria visible in the screenshot)",
       "match_tier": "NOT SCORED",
-      "notes": "User screenshot taken at 06:53 on the phone: application form open, with a resume upload and personal-detail fields. IBDIC logo. Place of posting Mumbai. The screenshot shows no closing date, qualifications or mode. The portal does not resolve from this environment, and two searches found no IBDIC notice. The RBI has warned of fake appointment letters from look-alike domains, so confirm on IBDIC's official site before uploading documents."
+      "notes": "User screenshot taken at 06:53 on the phone: application form open, with a resume upload and personal-detail fields. IBDIC logo. Place of posting Mumbai. The screenshot shows no closing date, qualifications or mode. The portal does not resolve from this environment. The official site http://ibdic.in, supplied by the user, does not resolve either. Two searches found no IBDIC notice. The RBI has warned of fake appointment letters from look-alike domains, so confirm on IBDIC's official site before uploading documents."
     },
     {
       "segment": "S4_CENTRAL_PSU",
@@ -242,7 +245,7 @@
   ],
   "priority_actions": [
     "DFCCIL GM (Finance) deputation: confirm the closing date on dfccil.com. If a 30-day window from 28 Sep 2026 applies, it closes about 28 Oct 2026.",
-    "IBDIC Director, Ecosystem Partnerships and Growth (Mumbai): an application form is open in the user's screenshot. Confirm the posting, closing date and eligibility on IBDIC's official site before uploading any documents.",
+    "IBDIC Director, Ecosystem Partnerships and Growth (Mumbai): an application form is open in the user's screenshot. Confirm the posting, closing date and eligibility on http://ibdic.in before uploading any documents. The site does not resolve from this environment.",
     "DRT Presiding Officer circular: read the official PDF for the deadline and eligibility clause. The judicial and ILS-cadre restriction is likely to exclude PSB officers, so confirm before effort."
   ],
   "limitations": [
@@ -250,6 +253,6 @@
     "Aggregator dates conflict in places (IBBI Executive Director notice date; DRT Presiding Officer post count). They are shown as stated and not reconciled.",
     "Not searched in this pilot: IFC, NDB, BIS, FSB, FATF, OECD, GCF and GEF career pages, the five private banks' career pages, and MIDC beyond one query.",
     "Eligibility verdicts are provisional. Total years of service, AI leadership and deputation rules are not established (skill section 2).",
-    "IBDIC: the screenshot shows an open application for a Director post in Mumbai. Two searches found no official notice. The portal does not resolve from this environment, so the closing date, eligibility and mode are unknown."
+    "IBDIC: the screenshot shows an open application for a Director post in Mumbai. Two searches found no official notice. The portal and the official site http://ibdic.in do not resolve from this environment, so the closing date, eligibility and mode are unknown."
   ]
 }

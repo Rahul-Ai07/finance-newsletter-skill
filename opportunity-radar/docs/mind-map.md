@@ -24,7 +24,7 @@ mindmap
       S1 Public sector banks and FIs
         SBI, IDBI, IBDIC, PSBs
         RBI, NABARD, SIDBI, EXIM
-        DICGC, CERSAI, CGTMSE
+        DICGC, CERSAI, CGTMSE, ECGC, IFCI, IRFC
       S2 Regulators and government finance
         DFS and Ministry of Finance
         IBBI

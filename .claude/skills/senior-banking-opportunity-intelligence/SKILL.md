@@ -46,7 +46,7 @@ The three original **search slots** are kept. Each slot contains one or more **i
 
 ### SLOT 1 — Indian public sector, government and tribunals
 
-**Core:** SBI and every Indian public sector bank; IDBI; IBDIC; RBI; NABARD; SIDBI; NHB; IIFCL; CGTMSE; CERSAI; SEBI; IBA; FSIB; DFS/Ministry of Finance; NITI Aayog; IBBI; Enforcement Directorate; DRT/DRAT; central and state PSUs and government undertakings; other relevant public finance, regulation, development, governance and investigative bodies.
+**Core:** SBI and every Indian public sector bank; IDBI; IBDIC; RBI; NABARD; SIDBI; NHB; ECGC; IFCI; IRFC; NCGTC; IIFCL; CGTMSE; CERSAI; SEBI; IBA; FSIB; DFS/Ministry of Finance; NITI Aayog; IBBI; Enforcement Directorate; DRT/DRAT; central and state PSUs and government undertakings; other relevant public finance, regulation, development, governance and investigative bodies.
 
 **Targets:** AGM, DGM, GM, Director, Executive Director, equivalent senior specialist, deputation, Registrar/Assistant Registrar/Recovery Officer, chief risk/compliance, financial inclusion, agricultural/MSME credit, credit monitoring, NPA resolution, transformation and AI governance. Treat tribunal/judicial appointments and investigative posts as *eligibility-sensitive*, not assumed accessible to PSB officers. Board-level PSU posts (Director Finance, Executive Director) usually carry a stated years-of-experience and qualification clause; read it exactly.
 
@@ -74,7 +74,7 @@ Each segment is configured in `opportunity-radar/config/segments.json` with its 
 
 | ID | Industry segment | Slot | Examples |
 |---|---|---|---|
-| S1 | Banking and financial institutions (public sector) | 1 | SBI, IDBI Bank, IBDIC, PSBs, RBI, NABARD, SIDBI, EXIM, IIFCL, NaBFID, HUDCO, IREDA, PFC, REC, NHB, DICGC, CERSAI, CGTMSE |
+| S1 | Banking and financial institutions (public sector) | 1 | SBI, IDBI Bank, IBDIC, PSBs, RBI, NABARD, SIDBI, EXIM, IIFCL, NaBFID, HUDCO, IREDA, PFC, REC, NHB, DICGC, CERSAI, CGTMSE, ECGC, IFCI, IRFC, NCGTC |
 | S2 | Regulators and government finance | 1 | DFS / Ministry of Finance, SEBI, IRDAI, PFRDA, IBBI, NITI Aayog, IBA, FSIB, NPCI |
 | S3 | Recovery, insolvency and tribunals | 1 | DRT and DRAT (via DFS circulars), NCLT and NCLAT, asset reconstruction companies |
 | S4 | Central PSUs and government undertakings | 1 | Railway PSUs (RVNL, DFCCIL, CONCOR, HRIDC), HMT, energy and infrastructure CPSEs, LIC, defence PSUs |

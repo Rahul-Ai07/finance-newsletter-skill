@@ -21,17 +21,20 @@
       "id": "S1_BANKING_FI",
       "label": "Banking and financial institutions (Indian public sector)",
       "slot": 1,
-      "covers": ["SBI", "IDBI Bank", "IBDIC (Indian Banks' Digital Infrastructure Company)", "Public sector banks", "RBI", "NABARD", "SIDBI", "EXIM Bank", "IIFCL", "NaBFID", "HUDCO", "IREDA", "PFC", "REC", "NHB", "DICGC", "CERSAI", "CGTMSE"],
-      "seed_queries": ["SBI AGM DGM recruitment notification {year}", "NABARD SIDBI EXIM deputation AGM DGM {year}", "IDBI Bank DICGC senior officer deputation {year}", "IBDIC Indian Banks Digital Infrastructure Company director {year}"],
+      "covers": ["SBI", "IDBI Bank", "IBDIC (Indian Banks' Digital Infrastructure Company)", "Public sector banks", "RBI", "NABARD", "SIDBI", "EXIM Bank", "IIFCL", "NaBFID", "HUDCO", "IREDA", "PFC", "REC", "NHB", "DICGC", "CERSAI", "CGTMSE", "ECGC", "IFCI", "IRFC", "NCGTC (National Credit Guarantee Trustee Company)"],
+      "seed_queries": ["SBI AGM DGM recruitment notification {year}", "NABARD SIDBI EXIM deputation AGM DGM {year}", "IDBI Bank DICGC senior officer deputation {year}", "IBDIC Indian Banks Digital Infrastructure Company director {year}", "SIDBI ECGC IFCI IRFC NaBFID deputation AGM DGM {year}"],
       "sources": [
         {"name": "DFS vacancies index", "url": "https://financialservices.gov.in/index.php/vacancies", "kind": "official_index", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
         {"name": "SBI current openings", "url": "https://sbi.co.in/web/careers/current-openings", "kind": "official_careers", "provenance": "skill_file", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
         {"name": "NABARD", "url": "https://www.nabard.org", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
-        {"name": "SIDBI", "url": "https://www.sidbi.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "SIDBI", "url": "https://www.sidbi.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
         {"name": "EXIM Bank", "url": "https://www.eximbankindia.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
         {"name": "IDBI Bank", "url": "https://www.idbibank.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
         {"name": "IBDIC application portal (third-party, seen in user screenshot)", "url": "https://app1.factohr.com", "kind": "application_portal", "provenance": "user_screenshot", "last_attempt": {"date": "2026-10-24", "result": "unreachable_dns"}},
-        {"name": "IBDIC official website (not yet identified; search for it and do not guess a URL)", "url": null, "kind": "official_careers", "provenance": "not_yet_identified", "last_attempt": null}
+        {"name": "IBDIC official website", "url": "http://ibdic.in", "kind": "official_careers", "provenance": "user_supplied", "last_attempt": {"date": "2026-10-24", "result": "dns_unresolved"}},
+        {"name": "ECGC", "url": "https://www.ecgc.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}},
+        {"name": "IFCI", "url": "https://www.ifciltd.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}},
+        {"name": "IRFC", "url": "https://www.irfc.co.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}}
       ]
     },
     {
