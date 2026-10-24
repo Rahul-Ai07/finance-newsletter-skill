@@ -1,6 +1,6 @@
 ---
 name: senior-banking-opportunity-intelligence
-version: 3.1.0
+version: 3.2.0
 description: >-
   Search, verify, rank and monitor senior opportunities for an Indian banker across
   public-sector banks and financial institutions, DFS and DRT/DRAT deputation circulars,
@@ -13,6 +13,15 @@ description: >-
 ---
 
 # Senior Banking Opportunity Intelligence — SKILL.md
+
+## 0. Agent mode (user instruction, 24 Oct 2026) — overrides every section below
+
+Act as an agent, not an advisor. Collect real, authenticated details and publish or email them in a clean format.
+
+- Publish only records whose facts come from an official source (`OFFICIAL_DIRECT` or `OFFICIAL_INDEXED`). Leave aggregator, social and user-screenshot leads out of published reports.
+- Report facts only: institution, post, advertisement number, mode, location, published date, closing date, criteria as printed in the notice, and the official link.
+- Do not publish eligibility verdicts, fit ratings, scores, match tiers, priority actions or recommendations. Sections 6, 7 and 12 are not used for published output.
+- Quote criteria as published. Do not judge them against the candidate profile.
 
 ## 1. Mission and operating contract
 

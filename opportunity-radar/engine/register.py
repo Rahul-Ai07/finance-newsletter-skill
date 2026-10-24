@@ -79,9 +79,11 @@ def normalise(finding, run_date):
         "verified": bool(finding.get("verified", False)),
         "source_confidence": finding.get(
             "source_confidence", "OFFICIAL_DIRECT" if finding.get("verified") else "AGGREGATOR"),
-        "eligibility_verdict": finding.get("eligibility_verdict", "ELIGIBILITY UNCONFIRMED"),
+        "published": finding.get("published", ""),
+        "criteria": finding.get("criteria", ""),
+        "eligibility_verdict": finding.get("eligibility_verdict", ""),
         "score": finding.get("score"),
-        "match_tier": finding.get("match_tier", "NOT SCORED"),
+        "match_tier": finding.get("match_tier", ""),
         "notes": finding.get("notes", ""),
     }
     if entry["status"] not in STATUSES:
@@ -139,73 +141,64 @@ def merge(register, run, run_date, alerts):
     return changes
 
 
+SOURCE_LABEL = {"OFFICIAL_DIRECT": "Official", "OFFICIAL_INDEXED": "Official (indexed)"}
+
+
+def _date(value):
+    return date.fromisoformat(value).strftime("%d %b %Y") if value else "Not stated"
+
+
+def _table(rows, sectors, with_deadline):
+    if not rows:
+        return ["None.", ""]
+    head = "| Sector | Institution | Post | Advertisement | Mode | Location |"
+    head += " Closes |" if with_deadline else ""
+    out = [head + " Source |", "|" + "---|" * (head.count("|")), ]
+    for c in rows:
+        flag = f" ({c['deadline_flag'].lower()})" if c.get("deadline_flag") else ""
+        line = (f"| {sectors.get(c['segment'], c['segment'])} | {c['institution']} | {c['official_title']} | "
+                f"{c['advertisement_number'] or '—'} | {c['employment_type']} | {c['location'] or '—'} |")
+        line += f" {_date(c['deadline'])}{flag} |" if with_deadline else ""
+        label = SOURCE_LABEL.get(c.get("source_confidence"), "Official")
+        out.append(line + f" [{label}]({c['source_url']}) |")
+    return out + [""]
+
+
 def render(run, changes, run_date, segments):
+    """Facts-only digest: official-source records only, with no opinions or advice."""
+    sectors = {s["id"]: s["label"].split(" (")[0] for s in segments["segments"]}
+    official = [c for c in changes if c["verified"]]
+    open_now = sorted((c for c in official if c["status"] == "VERIFIED OPEN" and is_live(c, run_date)),
+                      key=lambda c: c["deadline"])
+    listed = [c for c in official if c["status"] == "LISTED"]
+    closed = [c for c in official if not is_live(c, run_date)]
+    moved = [c for c in official if c["change_type"] not in ("NO CHANGE",)]
     checked = run.get("sources_checked", [])
-    blocked = [source for source in checked if source["result"].startswith("blocked")]
-    live = [change for change in changes if is_live(change, run_date)]
+    unreachable = [s for s in checked if s["result"].startswith(("blocked", "unreachable"))]
+
     lines = [
-        f"# Opportunity Watch: {run_date:%d %b %Y}, IST",
+        f"# Opportunity Watch: {run_date:%d %b %Y}",
         "",
-        f"Gate: {run.get('gate', 'scan day')} · Sources attempted: {len(checked)} · "
-        f"Blocked by network policy: {len(blocked)} · Live records: {len(live)} · "
-        f"From official sources: {sum(1 for c in live if c['verified'])}",
+        f"Official notices only. {len(open_now)} open with a published closing date, "
+        f"{len(listed)} listed without a readable closing date, {len(closed)} closed.",
         "",
-        "## Verified open now",
+        "## Open now",
         "",
     ]
-    open_now = [c for c in live if c["status"] == "VERIFIED OPEN"]
-    lines += [
-        f"- **{c['institution']} — {c['official_title']}** · closes {c['deadline']} {c['deadline_flag'] or ''} · "
-        f"{c['eligibility_verdict']} · [official source]({c['source_url']})"
-        for c in open_now
-    ] or ["None in the sources checked."]
-    lines += ["", "## Changes since previous scan", ""]
-    moved = [change for change in changes if change["change_type"] != "NO CHANGE"]
-    if moved:
-        lines += ["| Change | Institution — post | Deadline | Flag | Status |", "|---|---|---|---|---|"]
-        for change in moved:
-            lines.append(
-                f"| {change['change_type']} | {change['institution']} — {change['official_title']} | "
-                f"{change['deadline'] or 'not stated'} | {change['deadline_flag'] or '—'} | {change['status']} |"
-            )
-    else:
-        lines.append("No changes in this run.")
-    lines.append("")
-
-    lines += ["## Priority actions (maximum 3)", ""]
-    actions = run.get("priority_actions", [])[:3]
-    lines += [f"{number}. {action}" for number, action in enumerate(actions, start=1)] or ["None this run."]
-    lines.append("")
-
-    coverage = run.get("coverage", {})
-    for segment in segments["segments"]:
-        lines += [f"## {segment['label']}", "", f"Coverage: {coverage.get(segment['id'], 'NOT SEARCHED THIS RUN')}", ""]
-        rows = [change for change in live if change["segment"] == segment["id"]]
-        if not rows:
-            lines.append("No verified open vacancy in the sources checked. This is not a claim that none exist.")
-        for row in rows:
-            lines.append(
-                f"- **{row['institution']} — {row['official_title']}** · {row['employment_type']} · "
-                f"{row['location'] or 'location not stated'} · {row['status']} · deadline "
-                f"{row['deadline'] or 'not stated'} {row['deadline_flag'] or ''} · {row['eligibility_verdict']} · "
-                f"_{row['change_type']}_ · [source: {row.get('source_confidence', 'UNSPECIFIED')}]({row['source_url'] or '#'})"
-            )
-        lines.append("")
-
-    lines += ["## Unverified leads", ""]
-    leads = [c for c in changes if c["status"] == "UNVERIFIED" and is_live(c, run_date)]
-    lines += [f"- {c['institution']} — {c['official_title']} (deadline {c['deadline'] or 'not stated'}): {c['notes']}" for c in leads] or ["None."]
-    history = [c for c in changes if c["status"] == "UNVERIFIED" and not is_live(c, run_date)]
-    if history:
-        lines += ["", "Past deadline per unverified sources (history, not actionable):", ""]
-        lines += [f"- {c['institution']} — {c['official_title']} (deadline {c['deadline']})" for c in history]
-    lines.append("")
-
-    lines += ["## Coverage limitations", ""]
-    limitations = list(run.get("limitations", []))
-    limitations += [f"Blocked: {source['name']} ({source['url']})" for source in blocked]
-    lines += [f"- {item}" for item in limitations] or ["None recorded."]
-    lines.append("")
+    lines += _table(open_now, sectors, with_deadline=True)
+    lines += ["## Listed on official sites, closing date not in the text read", ""]
+    lines += _table(listed, sectors, with_deadline=False)
+    lines += ["## Published criteria", ""]
+    criteria = [c for c in open_now + listed if c["criteria"]]
+    lines += [f"- **{c['institution']}, {c['official_title']}:** {c['criteria']}" for c in criteria] or ["None in the text read."]
+    lines += ["", "## Closed", ""]
+    lines += _table(closed, sectors, with_deadline=True)
+    lines += ["## Changes since the previous report", ""]
+    lines += [f"- {c['change_type']}: {c['institution']}, {c['official_title']}" for c in moved] or ["None."]
+    lines += ["", "## Sources", "", f"- Sources checked: {len(checked)}."]
+    lines += [f"- Not reachable from the scan environment: {s['name']} ({s['url'] or 'no URL'})." for s in unreachable]
+    lines += ["- Official (indexed): the text was read from the institution's own domain through a domain-restricted "
+              "search, because the page could not be opened directly.", ""]
     return "\n".join(lines)
 
 

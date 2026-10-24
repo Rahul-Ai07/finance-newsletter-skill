@@ -103,6 +103,18 @@ class MergeTests(unittest.TestCase):
             register.merge(fresh_register(), {"findings": [finding(source_confidence="AGGREGATOR")]}, RUN, ALERTS)
 
 
+class RenderTests(unittest.TestCase):
+    def test_digest_lists_official_records_only_without_advice(self):
+        reg = fresh_register()
+        run = {"findings": [finding(), finding(official_title="AGM (Recovery)", verified=False)]}
+        changes = register.merge(reg, run, RUN, ALERTS)
+        text = register.render(run, changes, RUN, {"segments": [{"id": "S1_BANKING_FI", "label": "Banking"}]})
+        self.assertIn("Deputy General Manager (AI Governance)", text)
+        self.assertNotIn("AGM (Recovery)", text)
+        self.assertNotIn("Priority actions", text)
+        self.assertNotIn("ELIGIBILITY", text)
+
+
 class DeadlineFlagTests(unittest.TestCase):
     def test_flags(self):
         self.assertEqual(register.deadline_flag("2026-10-26", RUN, ALERTS), "URGENT")
