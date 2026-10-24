@@ -92,7 +92,7 @@ Rules the engine enforces:
 
 ## Notifications
 
-The scheduled task is set to push a notification when a scan finishes with something worth reading. Email is off (`notifications.email` in `schedule.json`). Turn it on there if you want the digest by email.
+The scheduled task sends a push notification and an email to the account owner when a scan finishes with something worth reading. Both are recorded under `notifications` in `schedule.json`; that file documents the setting, and the scheduled task itself holds it.
 
 ## Network access
 

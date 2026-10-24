@@ -9,7 +9,7 @@
     "name": "Opportunity Radar Alternate Day Scan",
     "cron": "CRON_TZ=Asia/Kolkata 56 8 * * *",
     "note": "Fires daily at 08:56 IST. The cadence gate exits early on non-scan days, so the scan runs every other day.",
-    "notifications": {"push": true, "email": false}
+    "notifications": {"push": true, "email": true}
   },
   "git": {
     "branch": "ccr-5b8902fd-3ed8ur",

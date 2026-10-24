@@ -193,7 +193,7 @@ For a **current vacancy check**, browse official sources live and cite them; nev
 
 - A scheduled task fires every morning at 08:56 IST. `opportunity-radar/engine/cadence.py` decides whether that day is a scan day, counting from the anchor date in `config/schedule.json`. Non-scan days exit with no changes and no notification.
 - State persists by commit, not by session memory. Each scan commits its run file, the register and the digest to branch `ccr-5b8902fd-3ed8ur`.
-- Notifications are sent by the scheduled task's push setting. Do not claim email or other delivery unless it is configured.
+- Notifications are sent by the scheduled task: push and email are both on. Do not claim any other delivery channel.
 - Confirm the schedule is enabled and the next scan date before stating it is running.
 
 ## 14. Quality-assurance acceptance tests
