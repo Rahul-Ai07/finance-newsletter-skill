@@ -194,7 +194,8 @@ def render(run, changes, run_date, segments):
     lines += ["", "## Closed", ""]
     lines += _table(closed, sectors, with_deadline=True)
     lines += ["## Changes since the previous report", ""]
-    lines += [f"- {c['change_type']}: {c['institution']}, {c['official_title']}" for c in moved] or ["None."]
+    lines += [f"- {c['change_type']}: {c['institution']}, {c['official_title']}"
+              + (f" ({c['advertisement_number']})" if c["advertisement_number"] else "") for c in moved] or ["None."]
     lines += ["", "## Sources", "", f"- Sources checked: {len(checked)}."]
     lines += [f"- Not reachable from the scan environment: {s['name']} ({s['url'] or 'no URL'})." for s in unreachable]
     lines += ["- Official (indexed): the text was read from the institution's own domain through a domain-restricted "
