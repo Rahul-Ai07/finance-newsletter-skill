@@ -17,16 +17,16 @@ Simple rule for every meal: **"Bhaji double, bhakri-poli single, varan/usal neve
 
 1 katori = ~150 ml bowl. 1 poli = ~30 g atta. 1 bhakri = ~40–45 g flour.
 
-| Food | Adult (moderate activity) | Child 4–6 yrs | Child 7–12 yrs |
-|---|---|---|---|
-| Grains (poli/bhakri/bhaat/poha etc.) | 5–7 poli-equivalents | 2–3 | 3–5 |
-| Pulses / dal / usal (cooked) | 2–3 katori | 1 katori | 1.5–2 katori |
-| Vegetables (cooked + salad) | 3–4 katori | 1.5 katori | 2–3 katori |
-| Green leafy veg | 1 katori (most days) | ½ katori | ½–1 katori |
-| Fruit | 1–2 medium | 1 | 1–2 |
-| Milk / curd / taak | 2 cups (~300 ml) | 2–3 cups (~400–500 ml) | 2–3 cups |
-| Nuts & seeds | 1 small handful (~20–30 g) | 1 tbsp powder | 1–2 tbsp |
-| Egg / fish / chicken (if non-veg) | 1 egg or 60–80 g fish/chicken on non-veg days | ½–1 egg / 30–40 g | 1 egg / 50 g |
+| Food | Adult (moderate activity) | Child 4–6 yrs | Child 7–12 yrs | Teen 13–17 yrs |
+|---|---|---|---|---|
+| Grains (poli/bhakri/bhaat/poha etc.) | 5–7 poli-equivalents | 2–3 | 3–5 | 6–8 (active boys may need more) |
+| Pulses / dal / usal (cooked) | 2–3 katori | 1 katori | 1.5–2 katori | 2–3 katori |
+| Vegetables (cooked + salad) | 3–4 katori | 1.5 katori | 2–3 katori | 3–4 katori |
+| Green leafy veg | 1 katori (most days) | ½ katori | ½–1 katori | 1 katori |
+| Fruit | 1–2 medium | 1 | 1–2 | 2 |
+| Milk / curd / taak | 2 cups (~300 ml) | 2–3 cups (~400–500 ml) | 2–3 cups | 3 cups (~500 ml) |
+| Nuts & seeds | 1 small handful (~20–30 g) | 1 tbsp powder | 1–2 tbsp | 1 handful (~30 g) |
+| Egg / fish / chicken (if non-veg) | 1 egg or 60–80 g fish/chicken on non-veg days | ½–1 egg / 30–40 g | 1 egg / 50 g | 1–2 eggs / 80–100 g |
 
 Protein guide: adults roughly 0.8–1 g per kg body weight per day; school-age children need proportionally more for growth — that's why protein at breakfast matters.
 
@@ -77,6 +77,8 @@ Protein guide: adults roughly 0.8–1 g per kg body weight per day; school-age c
 - Picky eaters: hide greens in thalipeeth, paratha, dhirde and pithla; let kids help shape and garnish; offer a new vegetable alongside a favourite.
 - Limit packaged juice, chips, biscuits and chocolates; keep a "healthy snack jar": roasted chana, makhana, shengdana chikki (small piece), dink/methi-free dry fruit laddoo, rajgira chikki.
 - Spice: take kids' portion out before adding extra chilli; balance with dahi or tup.
+
+- **Teens (13–17):** fastest growth since infancy — needs near-adult (often more) food, extra calcium (3 dairy servings), iron (girls especially after periods start), and protein at every meal. Don't let a teen skip breakfast; keep a filling after-school snack (sprout chaat, egg sandwich, paneer roll, peanut chikki + milk).
 
 ## 7. Adults — special notes
 

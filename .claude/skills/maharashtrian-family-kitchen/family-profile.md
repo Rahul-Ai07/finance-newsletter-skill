@@ -8,14 +8,14 @@
 |---|---|---|
 | Adult 1 | TBD | TBD |
 | Adult 2 | TBD | TBD |
-| Child 1 | TBD [assume 8 yrs] | TBD |
-| Child 2 | TBD [assume 5 yrs] | TBD |
+| Child 1 | 14 | Teen growth spurt — near-adult portions, high protein, calcium & iron |
+| Child 2 | 8 | Mild spice; school tiffin |
 
 Guests: 2–4 visitors arrive occasionally (plan for up to 8 people).
 
 ## Food preferences
-- Diet type: TBD [default: vegetarian base, eggs allowed; fish/chicken on weekends — ask before assuming]
-- Veg-only days: TBD [default: none; common choices are Monday, Thursday, Saturday, all of Shravan]
+- Diet type: Non-vegetarian (eggs, fish, chicken) except on veg-only days
+- Veg-only days: Monday and Saturday (no egg, fish, chicken or mutton)
 - No onion-garlic days: TBD
 - Fasting (upvas) days: TBD [default: Ekadashi, Sankashti Chaturthi — adults only]
 - Spice level: TBD [default: medium for adults, mild for kids]
@@ -35,4 +35,5 @@ Guests: 2–4 visitors arrive occasionally (plan for up to 8 people).
 - Kids' tiffin needed: TBD [default: yes, school days Mon–Sat]
 
 ## Likes / dislikes log
+- 2026-11-24 — Kids are 14 and 8; veg-only on Monday and Saturday
 <!-- Add lines like: 2026-11-24 — Kids loved methi thalipeeth with butter; Adult 2 doesn't like karela -->
