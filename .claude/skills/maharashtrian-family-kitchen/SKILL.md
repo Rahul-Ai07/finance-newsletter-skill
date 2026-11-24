@@ -69,7 +69,9 @@ If the user wants a plan *right now*, don't block — use the defaults already i
 - Rotate pulses: toor, moong (whole & dal), masoor, matki, chawli, harbhara/kala chana, vatana, rajma, kulith.
 - Rotate grains: wheat, rice, jowar, bajra (winter), nachni, rava, poha, sabudana (only on upvas).
 - 1 "fun" meal (misal pav, pav bhaji, vada pav at home, kids' pick) — make it at home and make it healthier.
-- If non-veg: fish 1–2× / chicken or mutton 1× / eggs 2–4× a week; respect veg days in `family-profile.md`.
+- **Health first, favourites twice.** Build the week for balance, not for likes. Each family favourite listed under "Favourites" in `family-profile.md` appears **exactly twice a week** — no more — cooked the healthy way (curry, tawa, tandoor/grill, steamed; never deep-fried). Don't ask for or log daily likes/dislikes.
+- If non-veg: respect veg-only and fasting days in `family-profile.md` first; then place favourites (e.g., chicken 2× for the kids, seafood 2× for the adult who loves it) and eggs 2–3×. Mutton at most 1–2× a month.
+- Dairy (milk, dahi, taak, paneer) every day; paneer or homemade shrikhand/amrakhand as a dairy treat counts toward the twice-weekly favourite only if it's listed there.
 - Use the 4 rotating weeks in `weekly-monthly-planner.md` as a starting point, then adapt to season, profile and what the user says they have at home.
 
 **Kids:**

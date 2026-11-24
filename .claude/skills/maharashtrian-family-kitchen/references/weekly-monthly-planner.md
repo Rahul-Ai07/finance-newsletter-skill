@@ -84,7 +84,7 @@ Daily constant: **fruit**, **taak/dahi**, **one raw koshimbir**, **chutney powde
 | Week 1 | A | Restock pantry (bulk list below), make masalas |
 | Week 2 | B | Try one new recipe the kids choose |
 | Week 3 | C | Pickle/chutney powder refresh |
-| Week 4 | D | Review: what did the family love/skip? Update `family-profile.md` |
+| Week 4 | D | Review balance: pulses variety, greens count, favourites held to 2× a week |
 
 Then mark festivals and fasting days for the month (see `guests-festivals-seasons.md`) and swap those days' menus.
 

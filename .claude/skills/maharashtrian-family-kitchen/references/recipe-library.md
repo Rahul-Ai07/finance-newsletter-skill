@@ -237,6 +237,14 @@ Chicken stock (from 300 g chicken/bones with ginger-garlic, 1 tej patta, whole s
 ### 56. Chicken Sukka (dry, kid-friendly mild version)
 Boneless chicken + ginger-garlic + halad + mild masala + roasted khobra + tup — cooked dry. Good for tiffin in poli roll.
 
+### 56a. Kolambi (Prawns) Masala — Konkani
+⏱ 15 + 20 min · 🥗 lean protein, iodine, B12
+400 g cleaned, deveined prawns marinated with halad, salt, lemon 10 min · Phodni (2 tsp oil) + 1 onion finely chopped till golden · 1 tsp ginger-garlic paste · 1 tomato · 1½ tsp Malvani/kanda-lasun masala (kids: ½ tsp + 2 tbsp coconut milk) · 2 kokum · ¼ cup fresh khobra paste · prawns go in last, cook only 4–5 min till curled (overcooking = rubbery) · kothimbir. With bhaat, bhakri and solkadhi.
+
+### 56b. Tawa / Oven Tandoori Chicken (kids' favourite, not fried)
+⏱ marinate 2 hr–overnight + 25 min · 🥗 high protein
+750 g chicken legs/breast with slits · Marinade: ¾ cup thick dahi, 1 tbsp ginger-garlic, 1 tsp kashmiri chilli, ½ tsp halad, 1 tsp garam/goda masala, 1 tsp kasuri methi, 1 tbsp lemon, 1 tbsp mustard oil or groundnut oil, salt · Cook on a heavy tawa covered 15 min on medium, turning, then uncovered till charred — or bake 220 °C for 25–30 min. Serve with kanda-limbu, mint-dahi chutney and phulka; leftovers make the next day's tiffin poli roll.
+
 ---
 
 ## G. UPVAS (FASTING) — no onion, garlic, grains, rice, pulses; check family's own rules

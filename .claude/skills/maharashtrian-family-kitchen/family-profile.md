@@ -36,7 +36,14 @@ Guests: 2–4 visitors arrive occasionally (plan for up to 8 people).
 - Meal times: TBD [default: nashta 7:30, lunch 1:00, snack 4:30, dinner 8:00]
 - Kids' tiffin needed: TBD [default: yes, school days Mon–Sat]
 
-## Likes / dislikes log
+## Favourites (each appears exactly twice a week, cooked healthy)
+- Kids: **chicken** — pandhra/tambda rassa, chicken sukka, tandoori/tawa chicken, chicken poli roll (no deep-fried)
+- Adult: **seafood** — bangda/surmai/pomfret curry, tawa fish, prawns (kolambi) masala, solkadhi alongside
+- Everyone: **dairy** — milk, dahi, taak, paneer daily (not limited); shrikhand/amrakhand as an occasional treat
+
+Planning rule: health first. Don't plan around daily likes/dislikes; only these favourites get a guaranteed twice-weekly slot.
+
+## Notes log
 - 2026-11-24 — Kids are 14 and 8; veg-only on Monday and Saturday
 - 2026-11-24 — Adults fast on Ekadashi & Sankashti; kids don't
-<!-- Add lines like: 2026-11-24 — Kids loved methi thalipeeth with butter; Adult 2 doesn't like karela -->
+<!-- Add only lasting facts (ages, diet rules, fasting, health conditions) — not daily likes. -->
