@@ -17,7 +17,9 @@ Guests: 2–4 visitors arrive occasionally (plan for up to 8 people).
 - Diet type: Non-vegetarian (eggs, fish, chicken) except on veg-only days
 - Veg-only days: Monday and Saturday (no egg, fish, chicken or mutton)
 - No onion-garlic days: TBD
-- Fasting (upvas) days: TBD [default: Ekadashi, Sankashti Chaturthi — adults only]
+- Fasting (upvas) days: Ekadashi (both, twice a month) and Sankashti Chaturthi (monthly) — adults only; kids eat normal meals
+- On fasting days: keep the home kitchen vegetarian for everyone (assumed — confirm with family); Sankashti fast is broken after moonrise
+- Always verify the exact dates against a Marathi panchang / Kalnirnay — online calendars sometimes differ by a day
 - Spice level: TBD [default: medium for adults, mild for kids]
 - Regional style: TBD [default: Desh / Puneri everyday cooking, Kolhapuri & Malvani on weekends]
 - Everyday oil: TBD [default: groundnut (shengdana) oil; ghee in small measure]
@@ -36,4 +38,5 @@ Guests: 2–4 visitors arrive occasionally (plan for up to 8 people).
 
 ## Likes / dislikes log
 - 2026-11-24 — Kids are 14 and 8; veg-only on Monday and Saturday
+- 2026-11-24 — Adults fast on Ekadashi & Sankashti; kids don't
 <!-- Add lines like: 2026-11-24 — Kids loved methi thalipeeth with butter; Adult 2 doesn't like karela -->
