@@ -1,4 +1,4 @@
-<title>Aaj Kay Banvaycha</title>
+<title>ChefMyDeal</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Mukta:wght@400;600&display=swap">
@@ -160,6 +160,9 @@ table.wk tr:last-child td{border-bottom:0}
 .cell.fast{background:var(--kokum-soft);border-color:var(--kokum)}
 .cell.veg{background:var(--leaf-soft);border-color:var(--leaf)}
 .cell.today{outline:2px solid var(--halad);outline-offset:1px}
+.cell .fl{font-size:10.5px;font-weight:700;color:var(--halad);line-height:1.2}
+.fest{display:inline-block;font-size:12px;font-weight:700;color:var(--kokum);background:var(--kokum-soft);border-radius:999px;padding:2px 9px;margin:4px 0}
+.cal span:empty{display:block}
 .cell .ics{display:flex;gap:4px;margin-top:auto;flex-wrap:wrap}
 .cell .ics span{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:999px}
 .ics .c{background:var(--chilli-soft);color:var(--chilli)} .ics .s{background:var(--sea-soft);color:var(--sea)} .ics .e{background:var(--halad-soft);color:var(--ink)}
@@ -248,18 +251,19 @@ footer{color:var(--muted);font-size:12.5px;padding-block:8px 32px}
   <div class="wrap top-in">
     <div class="brand">
       <svg width="40" height="40" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="4"/><circle cx="40" cy="44" r="16" fill="#F7C948"/><circle cx="78" cy="42" r="14" fill="#7CB342"/><circle cx="82" cy="78" r="16" fill="#E9DCC0"/><circle cx="42" cy="80" r="14" fill="#C0392B"/></svg>
-      <div><h1>Aaj Kay Banvaycha?</h1><small>Family kitchen · 2 adults, kids 14 &amp; 8</small></div>
+      <div><h1>ChefMyDeal</h1><small>Family kitchen · 2 adults, kids 14 &amp; 8</small></div>
     </div>
     <nav class="tabs" aria-label="Sections">
-      <button data-v="today">Today</button><button data-v="week">Week</button><button data-v="month">Month</button><button data-v="recipes">Recipes</button><button data-v="nutrition">Nutrition</button><button data-v="family">Family rules</button>
+      <button data-v="today">Today</button><button data-v="week">Week</button><button data-v="month">Calendar</button><button data-v="recipes">Recipes</button><button data-v="nutrition">Nutrition</button><button data-v="family">Family rules</button>
     </nav>
   </div>
 </header>
 <main class="wrap" id="view"></main>
-<footer class="wrap">Plan from the <b>maharashtrian-family-kitchen</b> skill · recipes serve 4 · illustrations are drawn, not photos · general healthy-eating guidance, not medical advice.</footer>
+<footer class="wrap">ChefMyDeal · plan from the <b>maharashtrian-family-kitchen</b> skill · recipes serve 4 · illustrations are drawn, not photos · general healthy-eating guidance, not medical advice.</footer>
 <dialog id="dlg" aria-label="Recipe"></dialog>
 
 <script src="data.js"></script>
+<script src="calendar.js"></script>
 <script>
 (function(){
 const K = window.KITCHEN, R = K.R, $ = s => document.querySelector(s);
@@ -304,8 +308,32 @@ function art(r){
 /* ---------- helpers ---------- */
 const dayAll = d => [...d.b, ...d.t, ...d.l, ...d.d, ...(d.fast ? [...d.fast.l, ...d.fast.d] : [])];
 const has = (ids, tag) => ids.some(id => R[id] && R[id].tags.includes(tag));
-function todayIndex(){ const n = new Date(); n.setHours(0,0,0,0); const diff = Math.round((n - K.START) / 864e5); return diff; }
-function dayAt(idx){ const i = ((idx % 28) + 28) % 28; const base = K.days[i]; const date = new Date(K.START); date.setDate(K.START.getDate() + idx); return Object.assign({}, base, { date, repeat: idx < 0 || idx >= 28 }); }
+function todayIndex(){ const n = new Date(); n.setHours(0,0,0,0); return Math.round((n - K.START) / 864e5); }
+function idxOf(y, m, d){ return Math.round((new Date(y, m, d) - K.START) / 864e5); }
+const FAST_VEG = { b: ['upit', 'dahi'], t: ['thalipeeth'], l: ['nachnibhakri', 'kalavatana', 'koshimbir'], s: 'chaat', d: ['dalmethi', 'poli', 'koshimbir'] };
+const FAST_ADULTS = { b: 'Milk + fruit + 4–5 almonds', l: ['bhagar', 'koshimbir'], s: 'Fruit + roasted makhana', d: ['rajgira', 'ratale'], dn: 'Dinner' };
+/* Any date, any month: the 4-week rotation repeats, and fast days and festivals come from the live lunar calendar. */
+function dayAt(idx){
+  const i = ((idx % 28) + 28) % 28; const base = K.days[i];
+  const date = new Date(K.START); date.setDate(K.START.getDate() + idx);
+  const info = window.CAL ? window.CAL.info(date.getFullYear(), date.getMonth(), date.getDate()) : [];
+  const fastInfo = info.find(x => x.k === 'fast');
+  let d = Object.assign({}, base, { date, idx, info, repeat: idx < 0 || idx >= 28, fast: base.fast });
+  if (base.type === 'fast' && !fastInfo) {
+    /* The 4-week cycle does not carry fast days: they come only from the lunar calendar. */
+    d = Object.assign(d, { type: 'veg', b: FAST_VEG.b, t: FAST_VEG.t, l: FAST_VEG.l, s: FAST_VEG.s, d: FAST_VEG.d, fast: null, note: '' });
+  }
+  if (fastInfo && base.type !== 'fast') {
+    d = Object.assign(d, { type: 'fast', b: FAST_VEG.b, t: FAST_VEG.t, l: FAST_VEG.l, s: FAST_VEG.s, d: FAST_VEG.d, fast: FAST_ADULTS,
+      note: fastInfo.n + ' — adults fast; the whole family eats vegetarian' + (fastInfo.food ? '. ' + fastInfo.food : '') });
+  } else if (!base.note && info.length) {
+    d.note = info.map(x => x.n).join(' · ');
+  }
+  return d;
+}
+function festivalsOn(d){ return (d.info || []).filter(x => x.k !== 'auspicious' || /Purnima|Amavasya/.test(x.n)); }
+function planDays(from, to){ const out = []; for (let i = from; i <= to; i++) out.push(dayAt(i)); return out; }
+function weekStartIdx(idx){ const d = dayAt(idx).date; const mon = (d.getDay() + 6) % 7; return idx - mon; }
 function balance(d){
   const sn = K.SN[d.s] || { t: [] };
   const protein = [d.b, d.l, d.d].every(m => has(m, 'P') || has(m, 'E') || has(m, 'C') || has(m, 'S'));
@@ -323,14 +351,12 @@ function balance(d){
 function chip(id){ const r = R[id]; if (!r) return ''; return `<button class="dish" data-r="${id}">${art(r)}<span><span class="dn">${esc(r.n)}</span><span class="dm">${r.m}</span></span></button>`; }
 function link(id){ const r = R[id]; if (!r) return ''; const c = r.tags.includes('C') ? ' c' : r.tags.includes('S') ? ' s' : ''; return `<button class="lk${c}" data-r="${id}">${esc(r.n)}</button>`; }
 function typePill(t){ const [c, l] = TYPE[t]; return `<span class="pill ${c}"><span class="dot"></span>${l}</span>`; }
-function weekOf(idx){ return Math.floor((((idx % 28) + 28) % 28) / 7); }
-function weekDays(w){ return K.days.slice(w * 7, w * 7 + 7); }
 function favCounts(days){ const c = { C: 0, S: 0, E: 0 }; days.forEach(d => { const all = [...d.b, ...d.t, ...d.l, ...d.d]; ['C', 'S', 'E'].forEach(k => { if (has(all, k)) c[k]++; }); }); return c; }
 function meter(label, val, target, color){ const segs = Array.from({ length: Math.max(target, val) }, (_, i) => `<i style="flex:1;background:${i < val ? color : 'var(--surface-2)'}"></i>`).join(''); return `<div class="meter"><div class="meter-top"><span>${label}</span><span>${val} of ${target}</span></div><div class="bar">${segs}</div></div>`; }
 
 /* ---------- views ---------- */
-let cur = todayIndex(); if (cur < 0) cur = 0;
-let weekSel = null, recFilter = 'all', recQuery = '';
+let cur = todayIndex();
+let weekStart = null, monthSel = null, recFilter = 'all', recQuery = '';
 
 function vToday(){
   const d = dayAt(cur), next = dayAt(cur + 1), real = todayIndex();
@@ -338,7 +364,7 @@ function vToday(){
   const mealRow = (b, mr, time, ids, extra) => `<div class="meal"><div class="when"><b>${b}</b><span class="mr">${mr}</span><span>${time}</span></div><div>${ids.length ? `<div class="dishes">${ids.map(chip).join('')}</div>` : ''}${extra || ''}</div></div>`;
   const sn = K.SN[d.s];
   const prep = [...new Set(dayAll(next).map(id => R[id] && R[id].pre).filter(Boolean))];
-  const wk = weekDays(weekOf(cur)), fc = favCounts(wk);
+  const wk = planDays(weekStartIdx(cur), weekStartIdx(cur) + 6), fc = favCounts(wk);
   const bal = balance(d);
   return `
   <section class="today-head">
@@ -347,7 +373,7 @@ function vToday(){
     <div class="daynav"><button class="btn" data-day="-1" aria-label="Previous day">‹ Prev</button><button class="btn${isToday ? ' primary' : ''}" data-day="0">Today</button><button class="btn" data-day="1" aria-label="Next day">Next ›</button></div>
   </section>
   ${d.note ? `<div class="note">${esc(d.note)}</div>` : ''}
-  ${d.repeat ? `<div class="note info">This date repeats the 4-week cycle. Check Kalnirnay for Ekadashi and Sankashti and swap in the fast-day menu.</div>` : ''}
+  ${festivalsOn(d).map(f => `<div class="fest" style="display:block;margin:0 0 12px;width:max-content">${esc(f.n)}</div>`).join('')}
   <div class="grid-today">
     <div class="view" style="gap:20px">
       <section class="card meals" aria-label="Meals">
@@ -374,21 +400,21 @@ function vToday(){
 }
 
 function vWeek(){
-  const w = weekSel ?? weekOf(Math.max(0, todayIndex()));
-  const days = weekDays(w), fc = favCounts(days);
-  const greens = days.map(d => has([...d.b, ...d.t, ...d.l, ...d.d], 'G'));
-  const millet = days.map(d => has([...d.b, ...d.t, ...d.l, ...d.d], 'M'));
+  const ws = weekStart ?? weekStartIdx(todayIndex());
+  const days = planDays(ws, ws + 6), fc = favCounts(days);
+  const has7 = (f) => days.map(d => f([...d.b, ...d.t, ...d.l, ...d.d]));
+  const greens = has7(a => has(a, 'G')), millet = has7(a => has(a, 'M'));
   const fruit = days.map(d => (K.SN[d.s] || { t: [] }).t.includes('fruit'));
   const pulses = [...new Set(days.flatMap(d => [...d.b, ...d.t, ...d.l, ...d.d].map(id => PULSE[id]).filter(Boolean)))];
   const fried = days.filter(d => has([...d.b, ...d.t, ...d.l, ...d.d], 'F')).length;
   const dots = arr => `<div class="dots7">${arr.map(v => `<i class="${v ? 'on' : ''}"></i>`).join('')}</div>`;
-  const tabs = [0, 1, 2, 3].map(i => { const a = K.days[i * 7].date, b = K.days[i * 7 + 6].date; return `<button data-w="${i}" aria-pressed="${i === w}"><b>Week ${i + 1}</b><span>${fmt(a, { day: 'numeric', month: 'short' })} – ${fmt(b, { day: 'numeric', month: 'short' })}</span></button>`; }).join('');
   const L = ids => ids.map(link).join(', ');
-  const rows = days.map(d => `<tr><td class="dcell"><b>${fmt(d.date, { weekday: 'short', day: 'numeric' })}</b>${typePill(d.type)}</td><td>${L(d.b)}</td><td>${L(d.t) || '—'}</td><td>${L(d.l)}</td><td>${esc(K.SN[d.s].x)}</td><td>${L(d.d)}${d.fast ? `<div style="margin-top:6px;color:var(--kokum);font-size:12.5px">Adults: ${L(d.fast.l)}; ${L(d.fast.d)}</div>` : ''}</td></tr>`).join('');
-  const cards = days.map(d => `<div class="card wkcard"><h3>${fmt(d.date, { weekday: 'long', day: 'numeric' })}${typePill(d.type)}</h3><dl><dt>Nashta</dt><dd>${L(d.b)}</dd>${d.t.length ? `<dt>Tiffin</dt><dd>${L(d.t)}</dd>` : ''}<dt>Lunch</dt><dd>${L(d.l)}</dd><dt>Snack</dt><dd>${esc(K.SN[d.s].x)}</dd><dt>Dinner</dt><dd>${L(d.d)}</dd>${d.fast ? `<dt>Upvas</dt><dd>${L(d.fast.l)}; ${L(d.fast.d)}</dd>` : ''}</dl></div>`).join('');
+  const wkLabel = `${fmt(days[0].date, { day: 'numeric', month: 'short' })} – ${fmt(days[6].date, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  const nav = `<div class="daynav"><button class="btn" data-wk="-1">‹ Previous week</button><button class="btn" data-wk="0">This week</button><button class="btn" data-wk="1">Next week ›</button></div>`;
+  const rows = days.map(d => `<tr><td class="dcell"><b>${fmt(d.date, { weekday: 'short', day: 'numeric' })}</b>${typePill(d.type)}${festivalsOn(d).map(f => `<div class="fest">${esc(f.n)}</div>`).join('')}</td><td>${L(d.b)}</td><td>${L(d.t) || '—'}</td><td>${L(d.l)}</td><td>${esc(K.SN[d.s].x)}</td><td>${L(d.d)}${d.fast ? `<div style="margin-top:6px;color:var(--kokum);font-size:12.5px">Adults: ${L(d.fast.l)}; ${L(d.fast.d)}</div>` : ''}</td></tr>`).join('');
+  const cards = days.map(d => `<div class="card wkcard"><h3>${fmt(d.date, { weekday: 'long', day: 'numeric' })}${typePill(d.type)}</h3>${festivalsOn(d).map(f => `<div class="fest">${esc(f.n)}</div>`).join('')}<dl><dt>Nashta</dt><dd>${L(d.b)}</dd>${d.t.length ? `<dt>Tiffin</dt><dd>${L(d.t)}</dd>` : ''}<dt>Lunch</dt><dd>${L(d.l)}</dd><dt>Snack</dt><dd>${esc(K.SN[d.s].x)}</dd><dt>Dinner</dt><dd>${L(d.d)}</dd>${d.fast ? `<dt>Upvas</dt><dd>${L(d.fast.l)}; ${L(d.fast.d)}</dd>` : ''}</dl></div>`).join('');
   return `
-  <section class="today-head"><div><div class="eyebrow">Weekly plan</div><h2>Week ${w + 1}</h2></div></section>
-  <div class="weektabs">${tabs}</div>
+  <section class="today-head"><div><div class="eyebrow">Weekly plan · ${wkLabel}</div><h2>This week's menu</h2></div>${nav}</section>
   <section class="tiles" aria-label="Week balance">
     <div class="card tile"><div class="k">Chicken</div><div class="v">${fc.C}<small> / 2</small></div>${meter('', fc.C, 2, 'var(--chilli)').replace('<div class="meter-top"><span></span><span>' + fc.C + ' of 2</span></div>', '')}<div class="s">Kids' favourite, twice a week</div></div>
     <div class="card tile"><div class="k">Seafood</div><div class="v">${fc.S}<small> / 2</small></div>${meter('', fc.S, 2, 'var(--sea)').replace('<div class="meter-top"><span></span><span>' + fc.S + ' of 2</span></div>', '')}<div class="s">Fish & prawns, twice a week</div></div>
@@ -396,12 +422,12 @@ function vWeek(){
     <div class="card tile"><div class="k">Millet</div><div class="v">${millet.filter(Boolean).length}<small> / 7 days</small></div>${dots(millet)}<div class="s">Jowar, bajra or nachni daily</div></div>
     <div class="card tile"><div class="k">Fruit</div><div class="v">${fruit.filter(Boolean).length}<small> / 7 days</small></div>${dots(fruit)}<div class="s">Plus milk every day</div></div>
     <div class="card tile"><div class="k">Pulses</div><div class="v">${pulses.length}<small> kinds</small></div><div class="s">${pulses.join(' · ')}</div></div>
-    <div class="card tile"><div class="k">Eggs</div><div class="v">${fc.E}<small> days</small></div><div class="s">Breakfast protein on non-veg days</div></div>
+    <div class="card tile"><div class="k">Fast days</div><div class="v">${days.filter(d => d.type === 'fast').length}<small> this week</small></div><div class="s">Adults only; family eats veg</div></div>
     <div class="card tile"><div class="k">Deep-fried</div><div class="v">${fried}<small> meals</small></div><div class="s">Limit: once a week at most</div></div>
   </section>
   <section class="card tablewrap"><table class="wk"><thead><tr><th>Day</th><th>Nashta</th><th>Tiffin</th><th>Lunch</th><th>4 pm</th><th>Dinner</th></tr></thead><tbody>${rows}</tbody></table></section>
   <section class="wkcards">${cards}</section>
-  ${grocery(w, days)}`;
+  ${grocery(ws, days)}`;
 }
 
 function grocery(w, days){
@@ -415,35 +441,38 @@ function grocery(w, days){
   let html = Object.entries(cats).map(([cat, items]) => { const its = items.filter(i => cnt[i]); its.forEach(i => used.add(i)); if (!its.length) return ''; return `<div><h4>${cat}</h4>${its.map(i => `<label class="${done[i] ? 'done' : ''}"><input type="checkbox" id="g-${w}-${i.replace(/\W+/g, '-')}" data-g="${esc(i)}" ${done[i] ? 'checked' : ''}><span>${esc(i)}</span><small>${i === 'milk' ? 'daily' : cnt[i] + '×'}</small></label>`).join('')}</div>`; }).join('');
   const other = Object.keys(cnt).filter(i => !used.has(i));
   if (other.length) html += `<div><h4>Other</h4>${other.map(i => `<label><input type="checkbox" data-g="${esc(i)}" ${done[i] ? 'checked' : ''}><span>${esc(i)}</span><small>${cnt[i]}×</small></label>`).join('')}</div>`;
-  return `<section class="card panel" data-groc="${w}"><h3>Grocery list for week ${w + 1}</h3><p style="margin:-6px 0 14px;color:var(--muted);font-size:13.5px">Built from this week's recipes. The number shows how many meals use it. Ticks are saved on this device.</p><div class="groc">${html}</div></section>`;
+  return `<section class="card panel" data-groc="${w}"><h3>Grocery list for this week</h3><p style="margin:-6px 0 14px;color:var(--muted);font-size:13.5px">Built from this week's recipes. The number shows how many meals use it. Ticks are saved on this device.</p><div class="groc">${html}</div></section>`;
 }
 
 function vMonth(){
-  const real = todayIndex();
+  const base = monthSel ?? new Date(); const y = base.getFullYear(), m = base.getMonth();
+  const first = new Date(y, m, 1), lastDay = new Date(y, m + 1, 0).getDate();
+  const lead = (first.getDay() + 6) % 7; const real = todayIndex();
   const hd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div class="hd">${x}</div>`).join('');
-  const cells = K.days.map(d => { const all = [...d.b, ...d.t, ...d.l, ...d.d]; const ic = (has(all, 'C') ? '<span class="c">Chicken</span>' : '') + (has(all, 'S') ? '<span class="s">Seafood</span>' : '') + (has(all, 'E') ? '<span class="e">Egg</span>' : '');
-    return `<button class="cell ${d.type}${d.i === real ? ' today' : ''}" data-go="${d.i}" aria-label="${fmt(d.date, { weekday: 'long', day: 'numeric', month: 'long' })}"><span class="n">${d.date.getDate()}</span><span class="tg">${d.type === 'fast' ? (d.note.split(' —')[0]) : TYPE[d.type][1]}</span><span class="ics">${ic}</span></button>`; }).join('');
+  let cells = ''; for (let i = 0; i < lead; i++) cells += '<span></span>';
+  for (let dd = 1; dd <= lastDay; dd++) {
+    const idx = idxOf(y, m, dd), d = dayAt(idx), all = [...d.b, ...d.t, ...d.l, ...d.d];
+    const ic = (has(all, 'C') ? '<span class="c">Chicken</span>' : '') + (has(all, 'S') ? '<span class="s">Seafood</span>' : '') + (has(all, 'E') ? '<span class="e">Egg</span>' : '');
+    const fest = festivalsOn(d).filter(x => x.k !== 'auspicious' || x.n !== 'Pradosh');
+    const fl = fest.length ? `<span class="fl">${esc(fest[0].n)}</span>` : '';
+    cells += `<button class="cell ${d.type}${idx === real ? ' today' : ''}" data-go="${idx}" aria-label="${fmt(d.date, { weekday: 'long', day: 'numeric', month: 'long' })}"><span class="n">${dd}</span>${fl}<span class="tg">${d.type === 'fast' ? 'Fast (adults)' : TYPE[d.type][1]}</span><span class="ics">${ic}</span></button>`;
+  }
+  const upcoming = [];
+  for (let i = real; i < real + 120 && upcoming.length < 14; i++) { const d = dayAt(i); festivalsOn(d).forEach(f => { if (f.k === 'festival' || f.k === 'fast' || /Ekadashi|Sankashti|Purnima|Amavasya|Gudi|Akshaya|Sankranti|Holi|Shivratri/.test(f.n)) upcoming.push({ d, f }); }); }
+  const ulist = upcoming.slice(0, 14).map(({ d, f }) => `<li><b>${fmt(d.date, { weekday: 'short', day: 'numeric', month: 'short' })}</b> · ${esc(f.n)}${f.food ? `<br><span style="color:var(--muted);font-size:13px">${esc(f.food)}</span>` : ''}</li>`).join('');
   return `
-  <section class="today-head"><div><div class="eyebrow">23 November – 20 December 2026</div><h2>Monthly plan</h2></div></section>
-  <div class="legend"><span><i style="background:var(--leaf-soft);border:1px solid var(--leaf)"></i>Veg day (Mon, Sat)</span><span><i style="background:var(--surface);border:1px solid var(--chilli)"></i>Non-veg allowed</span><span><i style="background:var(--kokum-soft);border:1px solid var(--kokum)"></i>Fast day, adults</span><span><i style="background:var(--surface);outline:2px solid var(--halad)"></i>Today</span></div>
+  <section class="today-head"><div><div class="eyebrow">Live calendar · ${first.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</div><h2>${first.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</h2></div>
+    <div class="daynav"><button class="btn" data-mo="-1" aria-label="Previous month">‹ Prev</button><button class="btn" data-mo="0">This month</button><button class="btn" data-mo="1" aria-label="Next month">Next ›</button></div></section>
+  <div class="legend"><span><i style="background:var(--leaf-soft);border:1px solid var(--leaf)"></i>Veg day (Mon, Sat)</span><span><i style="background:var(--surface);border:1px solid var(--chilli)"></i>Non-veg allowed</span><span><i style="background:var(--kokum-soft);border:1px solid var(--kokum)"></i>Fast day, adults (Ekadashi, Sankashti)</span><span><i style="background:var(--surface);outline:2px solid var(--halad)"></i>Today</span></div>
   <section class="cal" aria-label="Calendar">${hd}${cells}</section>
   <div class="two">
+    <section class="card panel"><h3>Upcoming days</h3><p style="margin:-6px 0 12px;color:var(--muted);font-size:13px">Worked out from today's date. Fast days and lunar days follow the moon, so confirm the exact day in your local panchang.</p><ul class="list" style="list-style:none;padding-left:0">${ulist || '<li>No festival days in the next 120 days.</li>'}</ul></section>
     <section class="card panel"><h3>Monthly kitchen tasks</h3><ol class="list">
-      <li><b>Week 1:</b> make goda masala (lasts 3 months) and get jowar, bajra and nachni ground fresh at the chakki.</li>
-      <li><b>Week 1:</b> roast and grind thalipeeth bhajani and metkut.</li>
-      <li><b>Week 2:</b> fresh jars of shengdana-lasun and javas (flaxseed) chutney.</li>
-      <li><b>Week 3:</b> refill millet flours. They turn stale faster than wheat.</li>
-      <li><b>Week 4:</b> check the balance tiles on the Week tab. Every week should show 5+ greens days and 2 each of chicken and seafood.</li>
+      <li><b>Once a month:</b> make goda masala and thalipeeth bhajani. Grind jowar, bajra and nachni fresh every 2–3 weeks.</li>
       <li><b>Every Sunday:</b> one hour of prep. Sprout matki and moong, clean greens, make ginger-garlic paste, boil potatoes.</li>
-    </ol></section>
-    <section class="card panel"><h3>December: what's in season</h3><ul class="list">
-      <li><b>Greens:</b> methi, palak, shepu, mula leaves, kothimbir</li>
-      <li><b>Vegetables:</b> fresh peas, tur dana, gajar, flower, bharit vangi, hurda (late Dec)</li>
-      <li><b>Fruit:</b> Nagpur santra, peru, awla, bor, chikoo, strawberry</li>
-      <li><b>Cooking:</b> bajra bhakri with til and loni, bharit, tup in moderation, one dink laddoo a day for the kids</li>
-    </ul><h3 style="margin-top:16px">Fasting days in this plan</h3><ul class="list">
-      <li>Fri 27 Nov: Sankashti Chaturthi</li><li>Fri 4 Dec: Utpanna Ekadashi</li><li>Sun 20 Dec: Mokshada Ekadashi</li>
-      <li style="color:var(--muted)">Online calendars differ by a day. Confirm in Kalnirnay.</li></ul></section>
+      <li><b>Every week:</b> check the balance tiles on the Week tab. Aim for 5+ greens days, chicken and seafood twice each.</li>
+      <li><b>Festival weeks:</b> open the day's card. Fast-day plates and the festival food are listed there.</li></ol>
+      <h3 style="margin-top:16px">Festivals in this calendar</h3><p style="margin:0;font-size:13.5px;color:var(--muted)">Dates for 2026–2027 are from published panchang sources. Ganesh Chaturthi and Diwali 2027 are not confirmed yet. Holi 2027 has two dates in the sources, 21 and 22 March.</p></section>
   </div>`;
 }
 
@@ -529,9 +558,10 @@ document.querySelector('nav.tabs').addEventListener('click', e => { const b = e.
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 $('#view').addEventListener('click', e => {
   const r = e.target.closest('[data-r]'); if (r) { openRecipe(r.dataset.r, 1); return; }
-  const d = e.target.closest('[data-day]'); if (d) { const k = +d.dataset.day; cur = k === 0 ? Math.max(0, todayIndex()) : cur + k; render(); return; }
-  const w = e.target.closest('[data-w]'); if (w) { weekSel = +w.dataset.w; render(); return; }
-  const g = e.target.closest('[data-go]'); if (g) { cur = +g.dataset.go; location.hash = 'today'; return; }
+  const wk = e.target.closest('[data-wk]'); if (wk) { const k = +wk.dataset.wk; weekStart = k === 0 ? weekStartIdx(todayIndex()) : (weekStart ?? weekStartIdx(todayIndex())) + 7 * k; render(); return; }
+  const mo = e.target.closest('[data-mo]'); if (mo) { const k = +mo.dataset.mo; const b = monthSel ?? new Date(); monthSel = k === 0 ? new Date() : new Date(b.getFullYear(), b.getMonth() + k, 1); render(); return; }
+  const d = e.target.closest('[data-day]'); if (d) { const k = +d.dataset.day; cur = k === 0 ? todayIndex() : cur + k; render(); return; }
+    const g = e.target.closest('[data-go]'); if (g) { cur = +g.dataset.go; location.hash = 'today'; return; }
   const c = e.target.closest('[data-cat]'); if (c) { recFilter = c.dataset.cat; document.querySelectorAll('[data-cat]').forEach(b => b.setAttribute('aria-pressed', b === c)); $('#rlist').innerHTML = recCards(); return; }
 });
 $('#view').addEventListener('change', e => {
