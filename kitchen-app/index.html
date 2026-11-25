@@ -1,0 +1,573 @@
+<title>ChefMyDeal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Mukta:wght@400;600&display=swap">
+<style>
+/* Layout: sticky kitchen header + tabbed views; content column max 1180px; cards only where they mark an object (meal, recipe, tile). */
+:root{
+  --bg:#F5F7F1; --surface:#FFFFFF; --surface-2:#EEF2E8; --ink:#1C251B; --muted:#5B6857; --line:#DDE3D5;
+  --leaf:#2E7D46; --leaf-soft:#DDEFE2; --halad:#C98A06; --halad-soft:#FBEFD2; --kokum:#8C2A4F; --kokum-soft:#F6E1EA;
+  --sea:#1C6E8C; --sea-soft:#DCEEF5; --chilli:#B4471F; --chilli-soft:#F8E2D8;
+  --plate:#E7E9E4; --plate-rim:#C9CEC4; --katori:#D3D8D0;
+  --good:#2E7D46; --warn:#B7791F; --bad:#B42318;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mr:"Mukta", "Noto Sans Devanagari", "Nirmala UI", sans-serif;
+  --r:14px; --shadow:0 1px 2px rgba(28,37,27,.06), 0 6px 20px rgba(28,37,27,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10150F; --surface:#171F16; --surface-2:#1E281C; --ink:#E7EDE2; --muted:#9BA996; --line:#2B3829;
+  --leaf:#63C07F; --leaf-soft:#1D3424; --halad:#EDB53D; --halad-soft:#3A2F14; --kokum:#E07AA2; --kokum-soft:#3A1D29;
+  --sea:#62B8D8; --sea-soft:#15303B; --chilli:#EE8A5F; --chilli-soft:#3B2016;
+  --plate:#2B3329; --plate-rim:#3F4A3C; --katori:#4A5447; --good:#63C07F; --warn:#EDB53D; --bad:#F2846F;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#10150F; --surface:#171F16; --surface-2:#1E281C; --ink:#E7EDE2; --muted:#9BA996; --line:#2B3829;
+  --leaf:#63C07F; --leaf-soft:#1D3424; --halad:#EDB53D; --halad-soft:#3A2F14; --kokum:#E07AA2; --kokum-soft:#3A1D29;
+  --sea:#62B8D8; --sea-soft:#15303B; --chilli:#EE8A5F; --chilli-soft:#3B2016;
+  --plate:#2B3329; --plate-rim:#3F4A3C; --katori:#4A5447; --good:#63C07F; --warn:#EDB53D; --bad:#F2846F;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.mr{font-family:var(--f-mr);font-weight:400}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--leaf)}
+:focus-visible{outline:2px solid var(--leaf);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:20px;padding-block:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand h1{font-size:20px;font-weight:800;line-height:1.1}
+.brand small{display:block;color:var(--muted);font-size:12px;font-family:var(--f-body);font-weight:500;letter-spacing:.02em}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto;max-width:100%}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+nav.tabs button[aria-current="page"]{background:var(--leaf);color:var(--surface)}
+nav.tabs button:hover:not([aria-current="page"]){background:var(--surface-2);color:var(--ink)}
+@media (max-width:720px){.top-in{gap:8px}nav.tabs{margin-left:0;width:100%}}
+
+main{padding-block:24px 64px}
+.view{display:grid;gap:20px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.pill.veg{background:var(--leaf-soft);color:var(--leaf)}
+.pill.nv{background:var(--chilli-soft);color:var(--chilli)}
+.pill.fast{background:var(--kokum-soft);color:var(--kokum)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+
+/* today */
+.today-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.today-head h2{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.05}
+.today-head .mr{font-size:20px;color:var(--muted);margin-top:4px}
+.daynav{display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:var(--surface)}
+.note{padding:12px 16px;border-radius:12px;background:var(--kokum-soft);color:var(--kokum);font-weight:600;font-size:14px}
+.note.info{background:var(--halad-soft);color:var(--ink)}
+.grid-today{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:900px){.grid-today{grid-template-columns:minmax(0,1fr)}}
+.meals{padding:8px 0}
+.meal{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:16px 20px;border-top:1px solid var(--line)}
+.meal:first-child{border-top:0}
+.meal .when b{display:block;font-family:var(--f-display);font-size:17px}
+.meal .when span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.meal .when .mr{display:block;font-size:14px}
+@media (max-width:560px){.meal{grid-template-columns:minmax(0,1fr);gap:8px;padding:14px 16px}}
+.dishes{display:flex;flex-wrap:wrap;gap:8px}
+.dish{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px 4px 4px;text-align:left;transition:border-color .15s, transform .15s}
+.dish:hover{border-color:var(--leaf);transform:translateY(-1px)}
+.dish svg{width:40px;height:40px;flex:none}
+.dish .dn{font-weight:600;font-size:14px;line-height:1.2}
+.dish .dm{display:block;font-family:var(--f-mr);color:var(--muted);font-size:12.5px;line-height:1.2}
+.snack{font-weight:500;color:var(--ink);padding:8px 0}
+.fastcard{border-color:var(--kokum)}
+.fastcard .meal .when b{color:var(--kokum)}
+.side{display:grid;gap:20px}
+.panel{padding:18px 20px}
+.panel h3{font-size:17px;margin-bottom:12px}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks li{display:flex;align-items:center;gap:10px;font-size:14px}
+.ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:13px;font-weight:700}
+.ic.ok{background:var(--leaf-soft);color:var(--good)}
+.ic.no{background:var(--chilli-soft);color:var(--bad)}
+.ic.na{background:var(--surface-2);color:var(--muted)}
+.checks small{color:var(--muted);margin-left:auto;text-align:right}
+.prep{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.fav{display:grid;gap:12px}
+.meter{display:grid;gap:6px}
+.meter-top{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.meter-top span:last-child{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500}
+.bar{height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden;display:flex;gap:2px}
+.bar i{display:block;height:100%;border-radius:999px}
+
+/* week */
+.weektabs{display:flex;gap:8px;flex-wrap:wrap}
+.weektabs button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px;text-align:left}
+.weektabs button b{display:block;font-family:var(--f-display);font-size:15px}
+.weektabs button span{font-size:12.5px;color:var(--muted)}
+.weektabs button[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{padding:16px}
+.tile .k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-family:var(--f-display);font-size:30px;font-weight:800;line-height:1.1;margin:6px 0 8px;font-variant-numeric:tabular-nums}
+.tile .v small{font-size:15px;color:var(--muted);font-weight:600}
+.tile .s{font-size:13px;color:var(--muted)}
+.dots7{display:flex;gap:4px;margin-top:4px}
+.dots7 i{flex:1;height:8px;border-radius:4px;background:var(--surface-2)}
+.dots7 i.on{background:var(--leaf)}
+.tablewrap{overflow-x:auto}
+table.wk{width:100%;border-collapse:separate;border-spacing:0;min-width:880px}
+table.wk th,table.wk td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line);font-size:13.5px}
+table.wk th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+table.wk td.dcell{width:120px}
+table.wk td.dcell b{font-family:var(--f-display);font-size:15px;display:block}
+table.wk tr:last-child td{border-bottom:0}
+.lk{border:0;background:none;padding:0;color:var(--ink);text-align:left;font-weight:500;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.lk:hover{text-decoration-color:var(--leaf);color:var(--leaf)}
+.lk.c{color:var(--chilli)} .lk.s{color:var(--sea)}
+.wkcards{display:none;gap:12px}
+@media (max-width:760px){.tablewrap{display:none}.wkcards{display:grid}}
+.wkcard{padding:14px 16px}
+.wkcard h3{font-size:16px;display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.wkcard dl{margin:0;display:grid;grid-template-columns:72px minmax(0,1fr);gap:4px 10px;font-size:13.5px}
+.wkcard dt{color:var(--muted);font-weight:600}
+.wkcard dd{margin:0}
+.groc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.groc{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.groc{grid-template-columns:minmax(0,1fr)}}
+.groc h4{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.groc label{display:flex;gap:8px;align-items:center;font-size:14px;padding:3px 0;text-transform:capitalize}
+.groc label input{accent-color:var(--leaf);width:16px;height:16px}
+.groc label small{margin-left:auto;color:var(--muted);text-transform:none;font-variant-numeric:tabular-nums}
+.groc label.done span{text-decoration:line-through;color:var(--muted)}
+
+/* month */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal .hd{font-size:12px;font-weight:600;color:var(--muted);text-align:center;padding-bottom:4px;letter-spacing:.04em}
+.cell{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px;min-height:92px;text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0}
+.cell:hover{border-color:var(--leaf)}
+.cell .n{font-family:var(--f-display);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.cell .tg{font-size:11.5px;font-weight:600}
+.cell.veg .tg{color:var(--leaf)} .cell.nv .tg{color:var(--chilli)} .cell.fast .tg{color:var(--kokum)}
+.cell.fast{background:var(--kokum-soft);border-color:var(--kokum)}
+.cell.veg{background:var(--leaf-soft);border-color:var(--leaf)}
+.cell.today{outline:2px solid var(--halad);outline-offset:1px}
+.cell .fl{font-size:10.5px;font-weight:700;color:var(--halad);line-height:1.2}
+.fest{display:inline-block;font-size:12px;font-weight:700;color:var(--kokum);background:var(--kokum-soft);border-radius:999px;padding:2px 9px;margin:4px 0}
+.cal span:empty{display:block}
+.cell .ics{display:flex;gap:4px;margin-top:auto;flex-wrap:wrap}
+.cell .ics span{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:999px}
+.ics .c{background:var(--chilli-soft);color:var(--chilli)} .ics .s{background:var(--sea-soft);color:var(--sea)} .ics .e{background:var(--halad-soft);color:var(--ink)}
+@media (max-width:560px){.cell{min-height:64px;padding:6px}.cell .tg{display:none}.cell .n{font-size:15px}.cell .ics span{font-size:0;padding:0;width:8px;height:8px}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media (max-width:820px){.two{grid-template-columns:minmax(0,1fr)}}
+.list{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.list b{font-weight:600}
+
+/* recipes */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 260px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font:inherit;color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.rcard{text-align:left;padding:0;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.rcard:hover{transform:translateY(-2px);border-color:var(--leaf)}
+.rcard .art{background:var(--surface-2);display:grid;place-items:center;padding:14px}
+.rcard .art svg{width:132px;height:132px}
+.rcard .body{padding:12px 14px 14px;display:grid;gap:4px}
+.rcard .body b{font-family:var(--f-display);font-size:16px;line-height:1.2}
+.rcard .body .mr{color:var(--muted);font-size:14px}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.tag.P{background:var(--halad-soft);color:var(--ink)} .tag.G{background:var(--leaf-soft);color:var(--leaf)} .tag.M{background:var(--surface-2);color:var(--ink)}
+.tag.C{background:var(--chilli-soft);color:var(--chilli)} .tag.S{background:var(--sea-soft);color:var(--sea)} .tag.U{background:var(--kokum-soft);color:var(--kokum)}
+
+/* modal */
+dialog{border:0;padding:0;border-radius:20px;background:var(--surface);color:var(--ink);width:min(920px,calc(100vw - 24px));max-height:calc(100dvh - 32px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(16,21,15,.55)}
+.mod{display:grid;grid-template-columns:300px minmax(0,1fr)}
+@media (max-width:760px){.mod{grid-template-columns:minmax(0,1fr)}}
+.mod-art{background:var(--surface-2);padding:24px;display:flex;flex-direction:column;gap:16px;align-items:center}
+.mod-art > svg{width:220px;height:220px;max-width:100%}
+.yt svg{width:18px;height:18px;flex:none}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+.fact{background:var(--surface);border-radius:10px;padding:8px 10px}
+.fact span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fact b{font-size:14px}
+.yt{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 14px;border-radius:12px;background:#C4302B;color:#fff;font-weight:700;text-decoration:none;font-size:14px}
+.yt:hover{background:#A82822}
+.mod-body{padding:24px 28px;display:grid;gap:18px;overflow:auto;min-width:0}
+.mod-body h2{font-size:28px;font-weight:800;line-height:1.1}
+.mod-body .mr{font-size:19px;color:var(--muted)}
+.x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:18px;line-height:1}
+.serv{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.serv button{border:0;background:transparent;padding:8px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.serv button[aria-pressed="true"]{background:var(--leaf);color:var(--surface)}
+.ings{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 20px;font-size:14px}
+@media (max-width:560px){.ings{grid-template-columns:minmax(0,1fr)}}
+.ings li{display:flex;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.ings b{min-width:62px;font-variant-numeric:tabular-nums;color:var(--leaf)}
+.steps{margin:0;padding-left:22px;display:grid;gap:10px;font-size:14.5px}
+.steps li::marker{font-family:var(--f-display);font-weight:700;color:var(--leaf)}
+.tips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.tips{grid-template-columns:minmax(0,1fr)}}
+.tipb{border-radius:12px;padding:12px 14px;font-size:13.5px}
+.tipb span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.tipb.a{background:var(--halad-soft)} .tipb.b{background:var(--leaf-soft)} .tipb.c{background:var(--sea-soft)}
+.prepnote{font-size:13.5px;padding:10px 12px;border-radius:10px;background:var(--surface-2)}
+
+/* nutrition */
+.plate-wrap{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:center;padding:20px}
+@media (max-width:700px){.plate-wrap{grid-template-columns:minmax(0,1fr);justify-items:center}}
+.plate-wrap svg{width:240px;height:240px;max-width:100%}
+.ptable{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+.ptable th,.ptable td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+.ptable th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ptable td:not(:first-child){font-variant-numeric:tabular-nums}
+.limits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.limits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.members{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.members{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.member{padding:16px}
+.member b{font-family:var(--f-display);font-size:18px;display:block}
+.member span{color:var(--muted);font-size:13.5px}
+footer{color:var(--muted);font-size:12.5px;padding-block:8px 32px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="4"/><circle cx="40" cy="44" r="16" fill="#F7C948"/><circle cx="78" cy="42" r="14" fill="#7CB342"/><circle cx="82" cy="78" r="16" fill="#E9DCC0"/><circle cx="42" cy="80" r="14" fill="#C0392B"/></svg>
+      <div><h1>ChefMyDeal</h1><small>Family kitchen · 2 adults, kids 14 &amp; 8</small></div>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button data-v="today">Today</button><button data-v="week">Week</button><button data-v="month">Calendar</button><button data-v="recipes">Recipes</button><button data-v="nutrition">Nutrition</button><button data-v="family">Family rules</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<footer class="wrap">ChefMyDeal · plan from the <b>maharashtrian-family-kitchen</b> skill · recipes serve 4 · illustrations are drawn, not photos · general healthy-eating guidance, not medical advice.</footer>
+<dialog id="dlg" aria-label="Recipe"></dialog>
+
+<script src="data.js"></script>
+<script src="calendar.js"></script>
+<script>
+(function(){
+const K = window.KITCHEN, R = K.R, $ = s => document.querySelector(s);
+const MR_DAYS = ['रविवार','सोमवार','मंगळवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
+const fmt = (d,o) => d.toLocaleDateString('en-IN', o);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store = { get(k,f){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : f; }catch(e){ return f; } }, set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const TYPE = { veg:['veg','Veg day'], nv:['nv','Non-veg allowed'], fast:['fast','Fast day (adults)'] };
+const PULSE = { varan:'Toor', amti:'Toor', dalpalak:'Toor', dalmethi:'Toor', daldhokli:'Toor', masooramti:'Masoor', matkiusal:'Matki', misal:'Matki', chawliusal:'Chawli', kalavatana:'Kala vatana', vatanausal:'Green peas', turdana:'Fresh tur', pithla:'Besan', besandhirde:'Besan', kulith:'Kulith', rajma:'Rajma', chhole:'Chhole', khichdi:'Moong', moongdhirde:'Moong', soup:'Moong', sukhibhaji:'Moong', dudhi:'Chana dal', kobi:'Chana dal', palakpatal:'Chana dal' };
+const FRUIT = { guava:['guava'], orange:['santra (orange)'], bmilk:['banana'], papaya:['papaya'], chaat:['seasonal fruit'], makhana:['makhana'] };
+
+/* ---------- dish illustrations (drawn, seeded per recipe) ---------- */
+function rng(seed){ let h = 2166136261; for (const c of seed) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function blob(cx, cy, r, rnd, n, j){ let p = ''; for (let i = 0; i < n; i++){ const a = i / n * Math.PI * 2, rr = r * (1 - j / 2 + rnd() * j); p += (i ? 'L' : 'M') + (cx + Math.cos(a) * rr).toFixed(1) + ' ' + (cy + Math.sin(a) * rr).toFixed(1); } return p + 'Z'; }
+function specks(rnd, n, r, cols, size){ let s = ''; for (let i = 0; i < n; i++){ const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r; s += `<circle cx="${(60 + Math.cos(a) * d).toFixed(1)}" cy="${(60 + Math.sin(a) * d).toFixed(1)}" r="${(size[0] + rnd() * size[1]).toFixed(1)}" fill="${cols[i % cols.length]}" opacity="${(0.65 + rnd() * .35).toFixed(2)}"/>`; } return s; }
+function art(r){
+  const [shape, base, acc, sp] = r.art, rnd = rng(r.id);
+  let g = `<circle cx="60" cy="60" r="57" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="2.5"/><circle cx="60" cy="60" r="49" fill="none" stroke="var(--plate-rim)" stroke-width="1" opacity=".6"/>`;
+  if (shape === 'bowl' || shape === 'glass'){
+    g += `<circle cx="60" cy="60" r="${shape === 'glass' ? 33 : 38}" fill="var(--katori)"/><circle cx="60" cy="60" r="${shape === 'glass' ? 28 : 32}" fill="${base}"/>`;
+    g += `<ellipse cx="52" cy="50" rx="14" ry="8" fill="${acc}" opacity=".45"/>` + specks(rnd, shape === 'glass' ? 6 : 16, 24, [sp, acc], [1.2, 2]);
+  } else if (shape === 'flat'){
+    g += `<path d="${blob(60, 60, 42, rnd, 28, .08)}" fill="${base}"/>`;
+    for (let i = 0; i < 12; i++){ const a = rnd() * 6.28, d = Math.sqrt(rnd()) * 32; g += `<ellipse cx="${(60 + Math.cos(a) * d).toFixed(1)}" cy="${(60 + Math.sin(a) * d).toFixed(1)}" rx="${(2 + rnd() * 4).toFixed(1)}" ry="${(1.5 + rnd() * 3).toFixed(1)}" fill="${i % 3 ? sp : acc}" opacity=".45"/>`; }
+  } else if (shape === 'heap'){
+    g += `<path d="${blob(60, 60, 38, rnd, 22, .18)}" fill="${base}"/>` + specks(rnd, 46, 32, [acc, sp, base], [0.9, 1.8]);
+  } else if (shape === 'fish'){
+    g += `<circle cx="60" cy="60" r="40" fill="var(--katori)"/><circle cx="60" cy="60" r="35" fill="${base}"/>`;
+    g += `<g transform="rotate(-18 60 60)"><ellipse cx="56" cy="60" rx="25" ry="11" fill="${sp}"/><path d="M80 60 L95 50 L95 70 Z" fill="${sp}"/><circle cx="40" cy="58" r="2" fill="#263238"/><path d="M50 52 Q56 60 50 68" stroke="${acc}" stroke-width="2" fill="none" opacity=".8"/></g>` + specks(rnd, 8, 30, [acc, '#43A047'], [1, 1.5]);
+  } else if (shape === 'chicken'){
+    g += `<circle cx="60" cy="60" r="40" fill="var(--katori)"/><circle cx="60" cy="60" r="35" fill="${base}"/>`;
+    [[48, 50, -30], [70, 52, 25], [58, 72, 80]].forEach(([x, y, a]) => { g += `<g transform="rotate(${a} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="12" ry="9" fill="${acc}"/><rect x="${x + 9}" y="${y - 2}" width="10" height="4" rx="2" fill="${sp}"/><circle cx="${x + 20}" cy="${y - 2}" r="2.6" fill="${sp}"/><circle cx="${x + 20}" cy="${y + 2}" r="2.6" fill="${sp}"/></g>`; });
+    g += specks(rnd, 8, 30, ['#43A047', sp], [1, 1.4]);
+  } else if (shape === 'roll'){
+    [[46, -20], [72, 20]].forEach(([x, a]) => { g += `<g transform="rotate(${a} ${x} 60)"><rect x="${x - 12}" y="30" width="24" height="60" rx="12" fill="${base}"/><rect x="${x - 7}" y="34" width="14" height="52" rx="7" fill="${acc}" opacity=".8"/><circle cx="${x}" cy="44" r="3" fill="${sp}"/><circle cx="${x - 2}" cy="66" r="3" fill="${sp}"/></g>`; });
+  } else if (shape === 'modak'){
+    [[42, 48], [76, 50], [59, 78]].forEach(([x, y]) => { g += `<path d="M${x} ${y - 20} C ${x + 4} ${y - 8}, ${x + 16} ${y - 2}, ${x + 14} ${y + 8} C ${x + 12} ${y + 16}, ${x - 12} ${y + 16}, ${x - 14} ${y + 8} C ${x - 16} ${y - 2}, ${x - 4} ${y - 8}, ${x} ${y - 20} Z" fill="${base}" stroke="${acc}" stroke-width="1.5"/>`; for (let k = -2; k <= 2; k++) g += `<path d="M${x} ${y - 18} Q ${x + k * 5} ${y} ${x + k * 6} ${y + 12}" stroke="${sp}" stroke-width="1" fill="none" opacity=".7"/>`; });
+  }
+  return `<svg viewBox="0 0 120 120" role="img" aria-label="${esc(r.n)} illustration">${g}</svg>`;
+}
+
+/* ---------- helpers ---------- */
+const dayAll = d => [...d.b, ...d.t, ...d.l, ...d.d, ...(d.fast ? [...d.fast.l, ...d.fast.d] : [])];
+const has = (ids, tag) => ids.some(id => R[id] && R[id].tags.includes(tag));
+function todayIndex(){ const n = new Date(); n.setHours(0,0,0,0); return Math.round((n - K.START) / 864e5); }
+function idxOf(y, m, d){ return Math.round((new Date(y, m, d) - K.START) / 864e5); }
+const FAST_VEG = { b: ['upit', 'dahi'], t: ['thalipeeth'], l: ['nachnibhakri', 'kalavatana', 'koshimbir'], s: 'chaat', d: ['dalmethi', 'poli', 'koshimbir'] };
+const FAST_ADULTS = { b: 'Milk + fruit + 4–5 almonds', l: ['bhagar', 'koshimbir'], s: 'Fruit + roasted makhana', d: ['rajgira', 'ratale'], dn: 'Dinner' };
+/* Any date, any month: the 4-week rotation repeats, and fast days and festivals come from the live lunar calendar. */
+function dayAt(idx){
+  const i = ((idx % 28) + 28) % 28; const base = K.days[i];
+  const date = new Date(K.START); date.setDate(K.START.getDate() + idx);
+  const info = window.CAL ? window.CAL.info(date.getFullYear(), date.getMonth(), date.getDate()) : [];
+  const fastInfo = info.find(x => x.k === 'fast');
+  let d = Object.assign({}, base, { date, idx, info, repeat: idx < 0 || idx >= 28, fast: base.fast });
+  if (base.type === 'fast' && !fastInfo) {
+    /* The 4-week cycle does not carry fast days: they come only from the lunar calendar. */
+    d = Object.assign(d, { type: 'veg', b: FAST_VEG.b, t: FAST_VEG.t, l: FAST_VEG.l, s: FAST_VEG.s, d: FAST_VEG.d, fast: null, note: '' });
+  }
+  if (fastInfo && base.type !== 'fast') {
+    d = Object.assign(d, { type: 'fast', b: FAST_VEG.b, t: FAST_VEG.t, l: FAST_VEG.l, s: FAST_VEG.s, d: FAST_VEG.d, fast: FAST_ADULTS,
+      note: fastInfo.n + ' — adults fast; the whole family eats vegetarian' + (fastInfo.food ? '. ' + fastInfo.food : '') });
+  } else if (!base.note && info.length) {
+    d.note = info.map(x => x.n).join(' · ');
+  }
+  return d;
+}
+function festivalsOn(d){ return (d.info || []).filter(x => x.k !== 'auspicious' || /Purnima|Amavasya/.test(x.n)); }
+function planDays(from, to){ const out = []; for (let i = from; i <= to; i++) out.push(dayAt(i)); return out; }
+function weekStartIdx(idx){ const d = dayAt(idx).date; const mon = (d.getDay() + 6) % 7; return idx - mon; }
+function balance(d){
+  const sn = K.SN[d.s] || { t: [] };
+  const protein = [d.b, d.l, d.d].every(m => has(m, 'P') || has(m, 'E') || has(m, 'C') || has(m, 'S'));
+  const all = [...d.b, ...d.t, ...d.l, ...d.d];
+  return [
+    ['Protein at every meal', protein, ''],
+    ['Green leafy vegetable', has(all, 'G'), ''],
+    ['Millet (jowar / bajra / nachni)', has(all, 'M'), ''],
+    ['Fruit', sn.t.includes('fruit'), sn.x],
+    ['Dairy: milk, dahi or taak', has(all, 'D') || sn.t.includes('D'), ''],
+    ['Raw koshimbir or salad', has(all, 'R'), ''],
+    ['No deep-fried food', !has(all, 'F'), '']
+  ];
+}
+function chip(id){ const r = R[id]; if (!r) return ''; return `<button class="dish" data-r="${id}">${art(r)}<span><span class="dn">${esc(r.n)}</span><span class="dm">${r.m}</span></span></button>`; }
+function link(id){ const r = R[id]; if (!r) return ''; const c = r.tags.includes('C') ? ' c' : r.tags.includes('S') ? ' s' : ''; return `<button class="lk${c}" data-r="${id}">${esc(r.n)}</button>`; }
+function typePill(t){ const [c, l] = TYPE[t]; return `<span class="pill ${c}"><span class="dot"></span>${l}</span>`; }
+function favCounts(days){ const c = { C: 0, S: 0, E: 0 }; days.forEach(d => { const all = [...d.b, ...d.t, ...d.l, ...d.d]; ['C', 'S', 'E'].forEach(k => { if (has(all, k)) c[k]++; }); }); return c; }
+function meter(label, val, target, color){ const segs = Array.from({ length: Math.max(target, val) }, (_, i) => `<i style="flex:1;background:${i < val ? color : 'var(--surface-2)'}"></i>`).join(''); return `<div class="meter"><div class="meter-top"><span>${label}</span><span>${val} of ${target}</span></div><div class="bar">${segs}</div></div>`; }
+
+/* ---------- views ---------- */
+let cur = todayIndex();
+let weekStart = null, monthSel = null, recFilter = 'all', recQuery = '';
+
+function vToday(){
+  const d = dayAt(cur), next = dayAt(cur + 1), real = todayIndex();
+  const isToday = cur === real;
+  const mealRow = (b, mr, time, ids, extra) => `<div class="meal"><div class="when"><b>${b}</b><span class="mr">${mr}</span><span>${time}</span></div><div>${ids.length ? `<div class="dishes">${ids.map(chip).join('')}</div>` : ''}${extra || ''}</div></div>`;
+  const sn = K.SN[d.s];
+  const prep = [...new Set(dayAll(next).map(id => R[id] && R[id].pre).filter(Boolean))];
+  const wk = planDays(weekStartIdx(cur), weekStartIdx(cur) + 6), fc = favCounts(wk);
+  const bal = balance(d);
+  return `
+  <section class="today-head">
+    <div><div class="eyebrow">${isToday ? 'Today' : cur === real + 1 ? 'Tomorrow' : 'Plan for'} · ${typePill(d.type)}</div>
+      <h2>${fmt(d.date, { weekday: 'long', day: 'numeric', month: 'long' })}</h2><div class="mr">${MR_DAYS[d.date.getDay()]}</div></div>
+    <div class="daynav"><button class="btn" data-day="-1" aria-label="Previous day">‹ Prev</button><button class="btn${isToday ? ' primary' : ''}" data-day="0">Today</button><button class="btn" data-day="1" aria-label="Next day">Next ›</button></div>
+  </section>
+  ${d.note ? `<div class="note">${esc(d.note)}</div>` : ''}
+  ${festivalsOn(d).map(f => `<div class="fest" style="display:block;margin:0 0 12px;width:max-content">${esc(f.n)}</div>`).join('')}
+  <div class="grid-today">
+    <div class="view" style="gap:20px">
+      <section class="card meals" aria-label="Meals">
+        ${mealRow('Nashta', 'नाश्ता', '7:30 am', d.b)}
+        ${d.t.length ? mealRow('Tiffin', 'डबा', 'school', d.t) : ''}
+        ${mealRow('Lunch', 'दुपारचे जेवण', '1:00 pm', d.l)}
+        ${mealRow('Snack', 'खाऊ', '4:30 pm', [], `<div class="snack">${esc(sn.x)}</div>`)}
+        ${mealRow('Dinner', 'रात्रीचे जेवण', '8:00 pm', d.d)}
+      </section>
+      ${d.fast ? `<section class="card meals fastcard" aria-label="Adults' fasting plate">
+        <div class="meal"><div class="when"><b>Adults' upvas plate</b><span class="mr">उपवासाचे ताट</span></div><div class="snack">Kids eat the normal meals above. Everyone eats vegetarian today.</div></div>
+        ${mealRow('Morning', 'सकाळ', '7:30 am', [], `<div class="snack">${esc(d.fast.b)}</div>`)}
+        ${mealRow('Lunch', 'दुपार', '1:00 pm', d.fast.l)}
+        ${mealRow('Snack', 'खाऊ', '4:30 pm', [], `<div class="snack">${esc(d.fast.s)}</div>`)}
+        ${mealRow(d.fast.dn, 'रात्री', d.fast.dn === 'After moonrise' ? 'about 9 pm' : '8:00 pm', d.fast.d)}
+      </section>` : ''}
+    </div>
+    <aside class="side">
+      <section class="card panel"><h3>Balance check</h3><ul class="checks">${bal.map(([l, ok]) => `<li><span class="ic ${ok ? 'ok' : 'no'}" aria-hidden="true">${ok ? '✓' : '!'}</span>${l}<span class="sr" hidden>${ok ? 'yes' : 'missing'}</span></li>`).join('')}</ul></section>
+      <section class="card panel"><h3>Prep tonight for ${fmt(next.date, { weekday: 'long' })}</h3>${prep.length ? `<ul class="prep">${prep.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : `<p style="margin:0;color:var(--muted);font-size:14px">Nothing to soak or marinate. Chop onions and knead dough if you have 10 minutes.</p>`}</section>
+      <section class="card panel"><h3>Favourites this week</h3><div class="fav">${meter('Chicken (kids)', fc.C, 2, 'var(--chilli)')}${meter('Seafood', fc.S, 2, 'var(--sea)')}${meter('Eggs', fc.E, 3, 'var(--halad)')}</div><p style="margin:12px 0 0;font-size:12.5px;color:var(--muted)">Rule: health first. Chicken and seafood twice a week each, never deep-fried.</p></section>
+    </aside>
+  </div>`;
+}
+
+function vWeek(){
+  const ws = weekStart ?? weekStartIdx(todayIndex());
+  const days = planDays(ws, ws + 6), fc = favCounts(days);
+  const has7 = (f) => days.map(d => f([...d.b, ...d.t, ...d.l, ...d.d]));
+  const greens = has7(a => has(a, 'G')), millet = has7(a => has(a, 'M'));
+  const fruit = days.map(d => (K.SN[d.s] || { t: [] }).t.includes('fruit'));
+  const pulses = [...new Set(days.flatMap(d => [...d.b, ...d.t, ...d.l, ...d.d].map(id => PULSE[id]).filter(Boolean)))];
+  const fried = days.filter(d => has([...d.b, ...d.t, ...d.l, ...d.d], 'F')).length;
+  const dots = arr => `<div class="dots7">${arr.map(v => `<i class="${v ? 'on' : ''}"></i>`).join('')}</div>`;
+  const L = ids => ids.map(link).join(', ');
+  const wkLabel = `${fmt(days[0].date, { day: 'numeric', month: 'short' })} – ${fmt(days[6].date, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  const nav = `<div class="daynav"><button class="btn" data-wk="-1">‹ Previous week</button><button class="btn" data-wk="0">This week</button><button class="btn" data-wk="1">Next week ›</button></div>`;
+  const rows = days.map(d => `<tr><td class="dcell"><b>${fmt(d.date, { weekday: 'short', day: 'numeric' })}</b>${typePill(d.type)}${festivalsOn(d).map(f => `<div class="fest">${esc(f.n)}</div>`).join('')}</td><td>${L(d.b)}</td><td>${L(d.t) || '—'}</td><td>${L(d.l)}</td><td>${esc(K.SN[d.s].x)}</td><td>${L(d.d)}${d.fast ? `<div style="margin-top:6px;color:var(--kokum);font-size:12.5px">Adults: ${L(d.fast.l)}; ${L(d.fast.d)}</div>` : ''}</td></tr>`).join('');
+  const cards = days.map(d => `<div class="card wkcard"><h3>${fmt(d.date, { weekday: 'long', day: 'numeric' })}${typePill(d.type)}</h3>${festivalsOn(d).map(f => `<div class="fest">${esc(f.n)}</div>`).join('')}<dl><dt>Nashta</dt><dd>${L(d.b)}</dd>${d.t.length ? `<dt>Tiffin</dt><dd>${L(d.t)}</dd>` : ''}<dt>Lunch</dt><dd>${L(d.l)}</dd><dt>Snack</dt><dd>${esc(K.SN[d.s].x)}</dd><dt>Dinner</dt><dd>${L(d.d)}</dd>${d.fast ? `<dt>Upvas</dt><dd>${L(d.fast.l)}; ${L(d.fast.d)}</dd>` : ''}</dl></div>`).join('');
+  return `
+  <section class="today-head"><div><div class="eyebrow">Weekly plan · ${wkLabel}</div><h2>This week's menu</h2></div>${nav}</section>
+  <section class="tiles" aria-label="Week balance">
+    <div class="card tile"><div class="k">Chicken</div><div class="v">${fc.C}<small> / 2</small></div>${meter('', fc.C, 2, 'var(--chilli)').replace('<div class="meter-top"><span></span><span>' + fc.C + ' of 2</span></div>', '')}<div class="s">Kids' favourite, twice a week</div></div>
+    <div class="card tile"><div class="k">Seafood</div><div class="v">${fc.S}<small> / 2</small></div>${meter('', fc.S, 2, 'var(--sea)').replace('<div class="meter-top"><span></span><span>' + fc.S + ' of 2</span></div>', '')}<div class="s">Fish & prawns, twice a week</div></div>
+    <div class="card tile"><div class="k">Greens</div><div class="v">${greens.filter(Boolean).length}<small> / 7 days</small></div>${dots(greens)}<div class="s">Target: 5 or more days</div></div>
+    <div class="card tile"><div class="k">Millet</div><div class="v">${millet.filter(Boolean).length}<small> / 7 days</small></div>${dots(millet)}<div class="s">Jowar, bajra or nachni daily</div></div>
+    <div class="card tile"><div class="k">Fruit</div><div class="v">${fruit.filter(Boolean).length}<small> / 7 days</small></div>${dots(fruit)}<div class="s">Plus milk every day</div></div>
+    <div class="card tile"><div class="k">Pulses</div><div class="v">${pulses.length}<small> kinds</small></div><div class="s">${pulses.join(' · ')}</div></div>
+    <div class="card tile"><div class="k">Fast days</div><div class="v">${days.filter(d => d.type === 'fast').length}<small> this week</small></div><div class="s">Adults only; family eats veg</div></div>
+    <div class="card tile"><div class="k">Deep-fried</div><div class="v">${fried}<small> meals</small></div><div class="s">Limit: once a week at most</div></div>
+  </section>
+  <section class="card tablewrap"><table class="wk"><thead><tr><th>Day</th><th>Nashta</th><th>Tiffin</th><th>Lunch</th><th>4 pm</th><th>Dinner</th></tr></thead><tbody>${rows}</tbody></table></section>
+  <section class="wkcards">${cards}</section>
+  ${grocery(ws, days)}`;
+}
+
+function grocery(w, days){
+  const cnt = {};
+  days.forEach(d => { dayAll(d).forEach(id => (R[id] ? R[id].g : []).forEach(x => cnt[x] = (cnt[x] || 0) + 1)); (FRUIT[d.s] || []).forEach(x => cnt[x] = (cnt[x] || 0) + 1); });
+  cnt['milk'] = 7;
+  const cats = Object.assign({}, K.GROC); cats['Fale (fruit)'] = [...cats['Fale (fruit)'], 'guava', 'santra (orange)', 'banana', 'papaya', 'seasonal fruit'];
+  cats['Pantry'] = [...cats['Pantry'], 'makhana'];
+  const done = store.get('groc-w' + w, {});
+  const used = new Set();
+  let html = Object.entries(cats).map(([cat, items]) => { const its = items.filter(i => cnt[i]); its.forEach(i => used.add(i)); if (!its.length) return ''; return `<div><h4>${cat}</h4>${its.map(i => `<label class="${done[i] ? 'done' : ''}"><input type="checkbox" id="g-${w}-${i.replace(/\W+/g, '-')}" data-g="${esc(i)}" ${done[i] ? 'checked' : ''}><span>${esc(i)}</span><small>${i === 'milk' ? 'daily' : cnt[i] + '×'}</small></label>`).join('')}</div>`; }).join('');
+  const other = Object.keys(cnt).filter(i => !used.has(i));
+  if (other.length) html += `<div><h4>Other</h4>${other.map(i => `<label><input type="checkbox" data-g="${esc(i)}" ${done[i] ? 'checked' : ''}><span>${esc(i)}</span><small>${cnt[i]}×</small></label>`).join('')}</div>`;
+  return `<section class="card panel" data-groc="${w}"><h3>Grocery list for this week</h3><p style="margin:-6px 0 14px;color:var(--muted);font-size:13.5px">Built from this week's recipes. The number shows how many meals use it. Ticks are saved on this device.</p><div class="groc">${html}</div></section>`;
+}
+
+function vMonth(){
+  const base = monthSel ?? new Date(); const y = base.getFullYear(), m = base.getMonth();
+  const first = new Date(y, m, 1), lastDay = new Date(y, m + 1, 0).getDate();
+  const lead = (first.getDay() + 6) % 7; const real = todayIndex();
+  const hd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div class="hd">${x}</div>`).join('');
+  let cells = ''; for (let i = 0; i < lead; i++) cells += '<span></span>';
+  for (let dd = 1; dd <= lastDay; dd++) {
+    const idx = idxOf(y, m, dd), d = dayAt(idx), all = [...d.b, ...d.t, ...d.l, ...d.d];
+    const ic = (has(all, 'C') ? '<span class="c">Chicken</span>' : '') + (has(all, 'S') ? '<span class="s">Seafood</span>' : '') + (has(all, 'E') ? '<span class="e">Egg</span>' : '');
+    const fest = festivalsOn(d).filter(x => x.k !== 'auspicious' || x.n !== 'Pradosh');
+    const fl = fest.length ? `<span class="fl">${esc(fest[0].n)}</span>` : '';
+    cells += `<button class="cell ${d.type}${idx === real ? ' today' : ''}" data-go="${idx}" aria-label="${fmt(d.date, { weekday: 'long', day: 'numeric', month: 'long' })}"><span class="n">${dd}</span>${fl}<span class="tg">${d.type === 'fast' ? 'Fast (adults)' : TYPE[d.type][1]}</span><span class="ics">${ic}</span></button>`;
+  }
+  const upcoming = [];
+  for (let i = real; i < real + 120 && upcoming.length < 14; i++) { const d = dayAt(i); festivalsOn(d).forEach(f => { if (f.k === 'festival' || f.k === 'fast' || /Ekadashi|Sankashti|Purnima|Amavasya|Gudi|Akshaya|Sankranti|Holi|Shivratri/.test(f.n)) upcoming.push({ d, f }); }); }
+  const ulist = upcoming.slice(0, 14).map(({ d, f }) => `<li><b>${fmt(d.date, { weekday: 'short', day: 'numeric', month: 'short' })}</b> · ${esc(f.n)}${f.food ? `<br><span style="color:var(--muted);font-size:13px">${esc(f.food)}</span>` : ''}</li>`).join('');
+  return `
+  <section class="today-head"><div><div class="eyebrow">Live calendar · ${first.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</div><h2>${first.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</h2></div>
+    <div class="daynav"><button class="btn" data-mo="-1" aria-label="Previous month">‹ Prev</button><button class="btn" data-mo="0">This month</button><button class="btn" data-mo="1" aria-label="Next month">Next ›</button></div></section>
+  <div class="legend"><span><i style="background:var(--leaf-soft);border:1px solid var(--leaf)"></i>Veg day (Mon, Sat)</span><span><i style="background:var(--surface);border:1px solid var(--chilli)"></i>Non-veg allowed</span><span><i style="background:var(--kokum-soft);border:1px solid var(--kokum)"></i>Fast day, adults (Ekadashi, Sankashti)</span><span><i style="background:var(--surface);outline:2px solid var(--halad)"></i>Today</span></div>
+  <section class="cal" aria-label="Calendar">${hd}${cells}</section>
+  <div class="two">
+    <section class="card panel"><h3>Upcoming days</h3><p style="margin:-6px 0 12px;color:var(--muted);font-size:13px">Worked out from today's date. Fast days and lunar days follow the moon, so confirm the exact day in your local panchang.</p><ul class="list" style="list-style:none;padding-left:0">${ulist || '<li>No festival days in the next 120 days.</li>'}</ul></section>
+    <section class="card panel"><h3>Monthly kitchen tasks</h3><ol class="list">
+      <li><b>Once a month:</b> make goda masala and thalipeeth bhajani. Grind jowar, bajra and nachni fresh every 2–3 weeks.</li>
+      <li><b>Every Sunday:</b> one hour of prep. Sprout matki and moong, clean greens, make ginger-garlic paste, boil potatoes.</li>
+      <li><b>Every week:</b> check the balance tiles on the Week tab. Aim for 5+ greens days, chicken and seafood twice each.</li>
+      <li><b>Festival weeks:</b> open the day's card. Fast-day plates and the festival food are listed there.</li></ol>
+      <h3 style="margin-top:16px">Festivals in this calendar</h3><p style="margin:0;font-size:13.5px;color:var(--muted)">Dates for 2026–2027 are from published panchang sources. Ganesh Chaturthi and Diwali 2027 are not confirmed yet. Holi 2027 has two dates in the sources, 21 and 22 March.</p></section>
+  </div>`;
+}
+
+const CATS = [['all', 'All'], ['nashta', 'Nashta'], ['protein', 'Varan & usal'], ['bhaji', 'Bhaji'], ['grain', 'Bhakri & bhaat'], ['side', 'Sides'], ['chicken', 'Chicken'], ['seafood', 'Seafood'], ['egg', 'Eggs'], ['upvas', 'Upvas'], ['sweet', 'Sweets']];
+const TAGN = { P: 'Protein', G: 'Greens', M: 'Millet', D: 'Dairy', C: 'Chicken', S: 'Seafood', E: 'Egg', U: 'Upvas', R: 'Raw' };
+function recCards(){
+  const q = recQuery.trim().toLowerCase();
+  const list = Object.values(R).filter(r => (recFilter === 'all' || r.cat === recFilter) && (!q || (r.n + ' ' + r.m + ' ' + r.ing.map(i => i[2]).join(' ')).toLowerCase().includes(q)));
+  if (!list.length) return `<p style="color:var(--muted)">No recipe matches “${esc(recQuery)}”. Try an ingredient, such as methi or paneer.</p>`;
+  return `<div class="rgrid">${list.map(r => `<button class="card rcard" data-r="${r.id}"><div class="art">${art(r)}</div><div class="body"><b>${esc(r.n)}</b><span class="mr">${r.m}</span><div class="meta"><span class="tag">${r.time} min</span>${r.tags.filter(t => TAGN[t]).slice(0, 3).map(t => `<span class="tag ${t}">${TAGN[t]}</span>`).join('')}</div></div></button>`).join('')}</div>`;
+}
+function vRecipes(){
+  return `
+  <section class="today-head"><div><div class="eyebrow">${Object.keys(R).length} recipes · serve 4, scale for guests</div><h2>Recipe library</h2></div></section>
+  <div class="toolbar"><input class="search" id="q" type="search" placeholder="Search a dish or ingredient (methi, paneer, kokum…)" value="${esc(recQuery)}" aria-label="Search recipes"></div>
+  <div class="chips" role="group" aria-label="Filter">${CATS.map(([k, l]) => `<button data-cat="${k}" aria-pressed="${recFilter === k}">${l}</button>`).join('')}</div>
+  <div id="rlist">${recCards()}</div>`;
+}
+
+function vNutrition(){
+  const seg = (a0, a1, c) => { const r = 100, cx = 120, cy = 120, p = a => [cx + r * Math.cos(a), cy + r * Math.sin(a)]; const [x0, y0] = p(a0), [x1, y1] = p(a1); return `<path d="M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z" fill="${c}" stroke="var(--surface)" stroke-width="3"/>`; };
+  const T = Math.PI * 2, s = -Math.PI / 2;
+  const plate = `<svg viewBox="0 0 240 240" role="img" aria-label="Plate: half vegetables, quarter grains, quarter protein"><circle cx="120" cy="120" r="116" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="3"/>${seg(s, s + T / 2, '#2E7D46')}${seg(s + T / 2, s + T * .75, '#C98A06')}${seg(s + T * .75, s + T, '#8C2A4F')}
+    <text x="168" y="124" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="15">½ Bhaji</text><text x="168" y="141" text-anchor="middle" fill="#fff" font-size="11">+ koshimbir</text>
+    <text x="78" y="168" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="14">¼ Grain</text>
+    <text x="78" y="82" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="14">¼ Protein</text></svg>`;
+  const rows = [['Grains (poli / bhakri / bhaat)', '5–7 poli-equivalents', '6–8', '3–5'], ['Varan, usal, dal (cooked)', '2–3 katori', '2–3 katori', '1.5–2 katori'], ['Vegetables (cooked + raw)', '3–4 katori', '3–4 katori', '2–3 katori'], ['Green leafy vegetables', '1 katori', '1 katori', '½–1 katori'], ['Fruit', '1–2', '2', '1–2'], ['Milk, dahi, taak', '2 cups', '3 cups', '2–3 cups'], ['Nuts & seeds', '20–30 g', '30 g', '1–2 tbsp'], ['Egg / fish / chicken (on those days)', '1 egg or 60–80 g', '1–2 eggs or 80–100 g', '1 egg or 50 g']];
+  const lim = [['Salt', '< 1 tsp', 'per adult, including pickle and papad'], ['Added sugar & gul', '< 5 tsp', 'kids: under 3–4 tsp'], ['Oil + tup', '4–5 tsp', 'per adult; measure the phodni'], ['Deep-fried', '1× / week', 'vada, bhajji, puri, farsan']];
+  return `
+  <section class="today-head"><div><div class="eyebrow">Based on ICMR-NIN dietary guidelines for Indians</div><h2>The balanced Maharashtrian plate</h2></div></section>
+  <section class="card plate-wrap">${plate}<div style="display:grid;gap:10px;font-size:15px;max-width:60ch"><p style="margin:0"><b>Half the plate is bhaji and koshimbir.</b> Cooked vegetables plus something raw at every lunch.</p><p style="margin:0"><b>A quarter is grains.</b> Bhakri, poli or bhaat, with a millet at least once a day.</p><p style="margin:0"><b>A quarter is protein.</b> Varan, usal, pithla, paneer, egg, fish or chicken at every meal, including breakfast.</p><p style="margin:0;color:var(--muted)">Plus taak or dahi, a spoon of chutney (shengdana, javas, til) and a little tup.</p></div></section>
+  <section class="card panel"><h3>How much each person needs in a day</h3><div class="tablewrap" style="display:block"><table class="ptable"><thead><tr><th>Food</th><th>Adult</th><th>Teen (14)</th><th>Child (8)</th></tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p style="margin:12px 0 0;font-size:13.5px;color:var(--muted)">1 katori = a 150 ml bowl. The 14-year-old is growing fast and often needs as much as an adult, or more. Add an extra bhakri whenever they're hungry.</p></section>
+  <section class="limits">${lim.map(([k, v, s]) => `<div class="card tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('')}</section>
+  <div class="two">
+    <section class="card panel"><h3>Iron & calcium for growing kids</h3><ul class="list"><li><b>Iron:</b> nachni, bajra, methi, palak, kulith, til, gul, poha</li><li><b>Help it absorb:</b> lemon, awla, peru or santra with the meal. Keep tea an hour away.</li><li><b>Calcium:</b> milk, dahi, paneer, nachni (the highest of any grain), til, rajgira</li><li><b>Omega-3:</b> bangda and tarli (sardine), javas chutney, walnuts</li><li><b>Vitamin D:</b> 15–20 minutes of morning sun, plus eggs and fish</li></ul></section>
+    <section class="card panel"><h3>Healthier swaps that keep the taste</h3><ul class="list"><li>Maida pav → whole-wheat pav or bhakri</li><li>Deep-fried fish → tawa rava fry</li><li>Fried chicken → tawa tandoori or sukka</li><li>Sugar in kids' milk → dates or banana</li><li>Packaged namkeen → roasted chana, makhana, poha chivda</li><li>Cream in gravies → cashew or coconut paste</li></ul><p style="margin:12px 0 0;font-size:12.5px;color:var(--muted)">For diabetes, BP, thyroid or any other condition, ask your doctor or a dietitian for personal targets.</p></section>
+  </div>`;
+}
+
+function vFamily(){
+  const m = [['Adult 1', 'Fasts on Ekadashi & Sankashti', 'Loves seafood and dairy'], ['Adult 2', 'Fasts on Ekadashi & Sankashti', 'Balanced, measured portions'], ['Teen, 14', 'Growth spurt', 'Adult portions, 3 dairy servings, loves chicken'], ['Child, 8', 'School tiffin', 'Mild spice, loves chicken']];
+  return `
+  <section class="today-head"><div><div class="eyebrow">Saved in family-profile.md</div><h2>Family rules</h2></div></section>
+  <section class="members">${m.map(([a, b, c]) => `<div class="card member"><b>${a}</b><span>${b}</span><p style="margin:8px 0 0;font-size:14px">${c}</p></div>`).join('')}</section>
+  <div class="two">
+    <section class="card panel"><h3>How every plan is built</h3><ol class="list"><li><b>Health first.</b> Every day needs protein at each meal, greens, a millet, fruit, dairy and something raw.</li><li><b>Favourites twice a week.</b> Chicken (kids) 2×, seafood 2×, never deep-fried. Dairy every day.</li><li><b>Veg days:</b> Monday and Saturday. No egg, fish or chicken.</li><li><b>Fast days:</b> Ekadashi and Sankashti. Only the adults fast, and the whole family eats vegetarian. Kids keep normal meals and skip rice on Ekadashi.</li><li><b>Guests:</b> 2–4 at a time. Every recipe scales to 6 or 8 people.</li><li><b>Fun meal:</b> once a week (misal or pav bhaji), made at home and lighter.</li></ol></section>
+    <section class="card panel"><h3>Guest scaling</h3><ul class="list"><li><b>6 people (+2):</b> curries ×1.75; rice, bhakri and poli ×2</li><li><b>8 people (+4):</b> curries ×2.5; rice, bhakri and poli ×2.75</li><li>Scale masala and salt to about 80% of that, then taste.</li><li>Plan 3 poli or 2 bhakri per adult guest, and ½ cup raw rice each.</li><li>Use the <b>Family 4 / +2 / +4</b> buttons in any recipe to scale its ingredients.</li></ul></section>
+  </div>`;
+}
+
+/* ---------- modal ---------- */
+const MULT = [[1, 'Family (4)'], [1.75, '+2 guests (6)'], [2.5, '+4 guests (8)']];
+function q(n, m){ if (n == null) return ''; let v = n * m; if (v >= 10) v = Math.round(v / 5) * 5; else v = Math.round(v * 4) / 4; const w = Math.floor(v), f = v - w; const fr = f === .25 ? '¼' : f === .5 ? '½' : f === .75 ? '¾' : ''; return (w ? w : '') + fr || '0'; }
+function openRecipe(id, mult){
+  const r = R[id]; if (!r) return; mult = mult || 1;
+  const on = K.days.filter(d => dayAll(d).includes(id)).map(d => fmt(d.date, { weekday: 'short', day: 'numeric', month: 'short' }));
+  const yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(r.n + ' recipe marathi');
+  $('#dlg').innerHTML = `<div style="position:relative"><button class="x" id="xclose" aria-label="Close">×</button><div class="mod">
+    <div class="mod-art">${art(r)}<div class="facts"><div class="fact"><span>Time</span><b>${r.time} min</b></div><div class="fact"><span>Spice</span><b>${esc(r.spice)}</b></div><div class="fact" style="grid-column:1/-1"><span>Good for</span><b>${esc(r.nut)}</b></div></div><a class="yt" href="${yt}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.8 15.1V8.9l5.8 3.1z"/></svg>Watch on YouTube</a></div>
+    <div class="mod-body">
+      <div><div class="eyebrow">${(CATS.find(c => c[0] === r.cat) || ['', ''])[1]}</div><h2>${esc(r.n)}</h2><div class="mr">${r.m}</div></div>
+      ${r.pre ? `<div class="prepnote"><b>Plan ahead:</b> ${esc(r.pre)}</div>` : ''}
+      <div><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px"><h3 style="font-size:18px">Ingredients</h3><div class="serv" role="group" aria-label="Servings">${MULT.map(([v, l]) => `<button data-mult="${v}" aria-pressed="${v === mult}">${l}</button>`).join('')}</div></div>
+        <ul class="ings">${r.ing.map(([n, u, t]) => `<li><b>${n == null ? '—' : q(n, mult) + (u ? ' ' + u : '')}</b><span>${esc(t)}</span></li>`).join('')}</ul>
+        ${mult > 1 ? `<p style="margin:8px 0 0;font-size:12.5px;color:var(--muted)">Scaled for guests. Add salt and masala at about 80% of this, then taste.</p>` : ''}</div>
+      <div><h3 style="font-size:18px;margin-bottom:10px">Method</h3><ol class="steps">${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
+      <div class="tips"><div class="tipb a"><span>Chef's secret</span>${esc(r.tip)}</div><div class="tipb b"><span>For the kids</span>${esc(r.kids)}</div><div class="tipb c"><span>Healthier</span>${esc(r.healthy)}</div></div>
+      ${on.length ? `<p style="margin:0;font-size:13px;color:var(--muted)"><b>On the plan:</b> ${on.join(' · ')}</p>` : ''}
+    </div></div></div>`;
+  const dlg = $('#dlg'); dlg.dataset.id = id; if (!dlg.open) dlg.showModal();
+  $('#dlg .mod-body').scrollTop = 0;
+}
+$('#dlg').addEventListener('click', e => {
+  if (e.target === e.currentTarget || e.target.closest('#xclose')) { $('#dlg').close(); return; }
+  const m = e.target.closest('[data-mult]'); if (m) openRecipe($('#dlg').dataset.id, +m.dataset.mult);
+});
+
+/* ---------- router ---------- */
+const VIEWS = { today: vToday, week: vWeek, month: vMonth, recipes: vRecipes, nutrition: vNutrition, family: vFamily };
+function current(){ const h = location.hash.slice(1); return VIEWS[h] ? h : 'today'; }
+function render(){ const v = current(); $('#view').innerHTML = `<div class="view">${VIEWS[v]()}</div>`; document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.v === v ? 'page' : 'false')); }
+document.querySelector('nav.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; if (location.hash.slice(1) === b.dataset.v) render(); else location.hash = b.dataset.v; window.scrollTo(0, 0); });
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+$('#view').addEventListener('click', e => {
+  const r = e.target.closest('[data-r]'); if (r) { openRecipe(r.dataset.r, 1); return; }
+  const wk = e.target.closest('[data-wk]'); if (wk) { const k = +wk.dataset.wk; weekStart = k === 0 ? weekStartIdx(todayIndex()) : (weekStart ?? weekStartIdx(todayIndex())) + 7 * k; render(); return; }
+  const mo = e.target.closest('[data-mo]'); if (mo) { const k = +mo.dataset.mo; const b = monthSel ?? new Date(); monthSel = k === 0 ? new Date() : new Date(b.getFullYear(), b.getMonth() + k, 1); render(); return; }
+  const d = e.target.closest('[data-day]'); if (d) { const k = +d.dataset.day; cur = k === 0 ? todayIndex() : cur + k; render(); return; }
+    const g = e.target.closest('[data-go]'); if (g) { cur = +g.dataset.go; location.hash = 'today'; return; }
+  const c = e.target.closest('[data-cat]'); if (c) { recFilter = c.dataset.cat; document.querySelectorAll('[data-cat]').forEach(b => b.setAttribute('aria-pressed', b === c)); $('#rlist').innerHTML = recCards(); return; }
+});
+$('#view').addEventListener('change', e => {
+  const g = e.target.closest('[data-g]'); if (!g) return; const w = g.closest('[data-groc]').dataset.groc; const k = 'groc-w' + w; const s = store.get(k, {}); s[g.dataset.g] = g.checked; store.set(k, s); g.closest('label').classList.toggle('done', g.checked);
+});
+$('#view').addEventListener('input', e => { if (e.target.id === 'q') { recQuery = e.target.value; $('#rlist').innerHTML = recCards(); } });
+render();
+})();
+</script>
