@@ -202,6 +202,11 @@ dialog::backdrop{background:rgba(16,21,15,.55)}
 .mod-art{background:var(--surface-2);padding:24px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .mod-art > svg{width:220px;height:220px;max-width:100%}
 .yt svg{width:18px;height:18px;flex:none}
+.mod-art > img{width:220px;height:220px;max-width:100%;object-fit:cover;border-radius:50%;box-shadow:var(--shadow)}
+.rcard .art img{width:132px;height:132px;object-fit:cover;border-radius:12px}
+.dish img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none}
+.photo-credit{font-size:12px;color:var(--muted);margin:0;max-width:260px;text-align:center}
+.photo-credit a{color:var(--muted)}
 .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
 .fact{background:var(--surface);border-radius:10px;padding:8px 10px}
 .fact span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -264,6 +269,7 @@ footer{color:var(--muted);font-size:12.5px;padding-block:8px 32px}
 
 <script src="data.js"></script>
 <script src="calendar.js"></script>
+<script src="photos.js"></script>
 <script>
 (function(){
 const K = window.KITCHEN, R = K.R, $ = s => document.querySelector(s);
@@ -280,6 +286,7 @@ function rng(seed){ let h = 2166136261; for (const c of seed) h = Math.imul(h ^ 
 function blob(cx, cy, r, rnd, n, j){ let p = ''; for (let i = 0; i < n; i++){ const a = i / n * Math.PI * 2, rr = r * (1 - j / 2 + rnd() * j); p += (i ? 'L' : 'M') + (cx + Math.cos(a) * rr).toFixed(1) + ' ' + (cy + Math.sin(a) * rr).toFixed(1); } return p + 'Z'; }
 function specks(rnd, n, r, cols, size){ let s = ''; for (let i = 0; i < n; i++){ const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r; s += `<circle cx="${(60 + Math.cos(a) * d).toFixed(1)}" cy="${(60 + Math.sin(a) * d).toFixed(1)}" r="${(size[0] + rnd() * size[1]).toFixed(1)}" fill="${cols[i % cols.length]}" opacity="${(0.65 + rnd() * .35).toFixed(2)}"/>`; } return s; }
 function art(r){
+  if (window.PHOTOS && window.PHOTOS[r.id]) return `<img src="${window.PHOTOS[r.id].file}" alt="${esc(r.n)}" loading="lazy">`;
   const [shape, base, acc, sp] = r.art, rnd = rng(r.id);
   let g = `<circle cx="60" cy="60" r="57" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="2.5"/><circle cx="60" cy="60" r="49" fill="none" stroke="var(--plate-rim)" stroke-width="1" opacity=".6"/>`;
   if (shape === 'bowl' || shape === 'glass'){
@@ -531,7 +538,7 @@ function openRecipe(id, mult){
   const on = K.days.filter(d => dayAll(d).includes(id)).map(d => fmt(d.date, { weekday: 'short', day: 'numeric', month: 'short' }));
   const yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(r.n + ' recipe marathi');
   $('#dlg').innerHTML = `<div style="position:relative"><button class="x" id="xclose" aria-label="Close">×</button><div class="mod">
-    <div class="mod-art">${art(r)}<div class="facts"><div class="fact"><span>Time</span><b>${r.time} min</b></div><div class="fact"><span>Spice</span><b>${esc(r.spice)}</b></div><div class="fact" style="grid-column:1/-1"><span>Good for</span><b>${esc(r.nut)}</b></div></div><a class="yt" href="${yt}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.8 15.1V8.9l5.8 3.1z"/></svg>Watch on YouTube</a></div>
+    <div class="mod-art">${art(r)}${window.PHOTOS && window.PHOTOS[id] ? `<p class="photo-credit">Photo: <a href="${esc(window.PHOTOS[id].source)}" target="_blank" rel="noopener">${esc(window.PHOTOS[id].title)}</a> · ${esc(window.PHOTOS[id].license)} · Wikimedia Commons</p>` : ''}<div class="facts"><div class="fact"><span>Time</span><b>${r.time} min</b></div><div class="fact"><span>Spice</span><b>${esc(r.spice)}</b></div><div class="fact" style="grid-column:1/-1"><span>Good for</span><b>${esc(r.nut)}</b></div></div><a class="yt" href="${yt}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.8 15.1V8.9l5.8 3.1z"/></svg>Watch on YouTube</a></div>
     <div class="mod-body">
       <div><div class="eyebrow">${(CATS.find(c => c[0] === r.cat) || ['', ''])[1]}</div><h2>${esc(r.n)}</h2><div class="mr">${r.m}</div></div>
       ${r.pre ? `<div class="prepnote"><b>Plan ahead:</b> ${esc(r.pre)}</div>` : ''}
