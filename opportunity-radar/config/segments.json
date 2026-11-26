@@ -1,0 +1,140 @@
+{
+  "version": "3.0.0",
+  "modes": {
+    "DFS_CIRCULAR": "Department of Financial Services circular for DRT/DRAT posts (Presiding Officer, Registrar, Assistant Registrar, Recovery Officer, staff), usually on deputation",
+    "DEPUTATION": "Deputation or secondment from a government body, PSU, PSB or regulator. Check cadre equivalence and NOC rules.",
+    "LATERAL": "Lateral or direct senior recruitment, regular or fixed-term",
+    "CONTRACT": "Fixed-term or contractual hire",
+    "CONSULTANCY": "Consultant, advisor or short assignment",
+    "EOI_ROSTER": "Expression of interest or roster. Not an assured vacancy."
+  },
+  "keyword_families": {
+    "seniority": ["AGM", "Assistant General Manager", "DGM", "Deputy General Manager", "GM", "General Manager", "Chief Manager", "Head", "Chief", "Director", "Executive Director", "Principal", "Senior Specialist", "Advisor", "Consultant"],
+    "employment_modes": ["deputation", "on deputation", "absorption", "lateral entry", "secondment", "contract", "expression of interest", "roster", "consultancy", "corrigendum", "extension of date"],
+    "tribunal_roles": ["Presiding Officer", "Registrar", "Assistant Registrar", "Recovery Officer", "DRT", "DRAT", "NCLT", "NCLAT"],
+    "ai_analytics": ["AI governance", "responsible AI", "model risk", "model validation", "machine learning", "GenAI", "data governance", "risk analytics", "fraud analytics", "digital transformation", "technology risk"],
+    "banking_domains": ["retail banking", "agriculture", "rural finance", "priority sector", "MSME", "credit", "NPA", "stressed assets", "SARFAESI", "recovery", "AML", "KYC", "compliance", "financial inclusion", "fintech"],
+    "locations": ["Mumbai", "Navi Mumbai", "Maharashtra", "Pune", "Bengaluru", "India", "South Asia", "Asia-Pacific"]
+  },
+  "segments": [
+    {
+      "id": "S1_BANKING_FI",
+      "label": "Banking and financial institutions (Indian public sector)",
+      "slot": 1,
+      "covers": ["SBI", "IDBI Bank", "IBDIC (Indian Banks' Digital Infrastructure Company)", "Public sector banks", "RBI", "NABARD", "SIDBI", "EXIM Bank", "IIFCL", "NaBFID", "HUDCO", "IREDA", "PFC", "REC", "NHB", "DICGC", "CERSAI", "CGTMSE", "ECGC", "IFCI", "IRFC", "NCGTC (National Credit Guarantee Trustee Company)"],
+      "seed_queries": ["SBI AGM DGM recruitment notification {year}", "NABARD SIDBI EXIM deputation AGM DGM {year}", "IDBI Bank DICGC senior officer deputation {year}", "IBDIC Indian Banks Digital Infrastructure Company director {year}", "SIDBI ECGC IFCI IRFC NaBFID deputation AGM DGM {year}"],
+      "sources": [
+        {"name": "DFS vacancies index", "url": "https://financialservices.gov.in/index.php/vacancies", "kind": "official_index", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "SBI current openings", "url": "https://sbi.bank.in/web/careers/current-openings", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "NABARD", "url": "https://www.nabard.org", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "SIDBI", "url": "https://www.sidbi.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "EXIM Bank", "url": "https://www.eximbankindia.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "IDBI Bank", "url": "https://www.idbi.bank.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "IIFCL", "url": "https://www.iifcl.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "National Housing Bank", "url": "https://www.nhb.org.in/oppurtunitiesnhb/", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "indexed_ok"}},
+        {"name": "IBDIC application portal (third-party, seen in user screenshot)", "url": "https://app1.factohr.com", "kind": "application_portal", "provenance": "user_screenshot", "last_attempt": {"date": "2026-10-24", "result": "unreachable_dns"}},
+        {"name": "IBDIC official website", "url": "http://ibdic.in", "kind": "official_careers", "provenance": "user_supplied", "last_attempt": {"date": "2026-10-24", "result": "dns_unresolved"}},
+        {"name": "ECGC", "url": "https://www.ecgc.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}},
+        {"name": "IFCI", "url": "https://www.ifciltd.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}},
+        {"name": "IRFC", "url": "https://www.irfc.co.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": {"date": "2026-10-24", "result": "unreachable_curl_000"}}
+      ]
+    },
+    {
+      "id": "S2_REGULATORS_GOVT_FINANCE",
+      "label": "Financial regulators and government finance",
+      "slot": 1,
+      "covers": ["DFS / Ministry of Finance", "SEBI", "IRDAI", "PFRDA", "IBBI (Insolvency and Bankruptcy Board of India)", "NITI Aayog", "IBA", "FSIB", "NPCI"],
+      "seed_queries": ["Department of Financial Services deputation vacancy {year}", "IBBI deputation General Manager Executive Director {year}", "SEBI IRDAI PFRDA deputation senior post {year}"],
+      "sources": [
+        {"name": "DFS vacancies index", "url": "https://financialservices.gov.in/index.php/vacancies", "kind": "official_index", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "IBBI careers", "url": "https://www.ibbi.gov.in/home/career", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "SEBI", "url": "https://www.sebi.gov.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "IRDAI", "url": "https://irdai.gov.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "NITI Aayog", "url": "https://www.niti.gov.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S3_RECOVERY_TRIBUNALS",
+      "label": "Recovery, insolvency and tribunals (DRT, DRAT, NCLT, ARCs)",
+      "slot": 1,
+      "covers": ["DRT / DRAT (via DFS circulars)", "NCLT / NCLAT", "Asset reconstruction companies", "IBBI (cross-listed)", "SARFAESI recovery roles"],
+      "seed_queries": ["DRT DRAT Presiding Officer Registrar Recovery Officer deputation {year}", "DFS circular DRT DRAT vacancy {year}", "NCLT NCLAT deputation vacancy {year}"],
+      "eligibility_note": "Presiding Officer posts are reserved for judicial and ILS-cadre candidates per the circular. Treat them as eligibility-sensitive for PSB officers.",
+      "sources": [
+        {"name": "DFS vacancies index", "url": "https://financialservices.gov.in/index.php/vacancies", "kind": "official_index", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403"}},
+        {"name": "DRT portal", "url": "https://drt.gov.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "NCLT", "url": "https://nclt.gov.in", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "Central State Jobs (discovery only)", "url": "https://centralstatejobs.in", "kind": "aggregator", "provenance": "search_result", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S4_CENTRAL_PSU",
+      "label": "Central PSUs and government undertakings (Maharatna, Navratna, Miniratna, railway and defence PSUs)",
+      "slot": 1,
+      "covers": ["Railway PSUs (RVNL, DFCCIL, CONCOR, HRIDC)", "HMT", "Energy and infrastructure CPSEs", "LIC", "Defence PSUs", "Other CPSEs"],
+      "seed_queries": ["PSU deputation general manager finance risk {year}", "GM Finance deputation notification {year} India PSU", "Chief Risk Officer PSU deputation {year}"],
+      "sources": [
+        {"name": "DFCCIL deputation listing", "url": "https://dfccil.com/Carrer/index?Id=3", "kind": "official_careers", "provenance": "search_result", "last_attempt": {"date": "2026-10-24", "result": "blocked_403; indexed_ok"}},
+        {"name": "PSU Connect (discovery only)", "url": "https://www.psuconnect.in", "kind": "aggregator", "provenance": "search_result", "last_attempt": null},
+        {"name": "TrueJobs (discovery only)", "url": "https://truejobs.co.in", "kind": "aggregator", "provenance": "search_result", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S5_MAHARASHTRA_STATE_UNDERTAKINGS",
+      "label": "Maharashtra state undertakings and power utilities",
+      "slot": 1,
+      "covers": ["MSEDCL and MSEBHCL group", "MahaGenco", "MahaTransco", "MSPGCL", "MSEB Solar Agro Power", "MIDC (no 2026 notice found yet)"],
+      "seed_queries": ["MSEDCL MahaGenco MahaTransco deputation Director Finance {year}", "Maharashtra state undertaking deputation general manager {year}"],
+      "sources": [
+        {"name": "MSEDCL (mahadiscom.in)", "url": "https://www.mahadiscom.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "MahaGenco", "url": "https://mahagenco.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "MahaTransco", "url": "https://www.mahatransco.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "MSEB Holding Co. (msebindia.com)", "url": "https://www.msebindia.com", "kind": "official_careers", "provenance": "search_result", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S6_PRIVATE_BANKS_UCB",
+      "label": "Private banks and Maharashtra urban cooperative banks",
+      "slot": 3,
+      "covers": ["HDFC Bank", "ICICI Bank", "Axis Bank", "Kotak Mahindra Bank", "IndusInd Bank", "Saraswat, SVC, TJSB, NKGSB, Cosmos (UCB anchors)", "MSC Bank (state apex cooperative, reported separately)"],
+      "seed_queries": ["NKGSB Saraswat TJSB Cosmos SVC AGM DGM recruitment {year}", "private bank AGM DGM lateral hiring {year} notification", "MSC Bank senior officer recruitment {year}"],
+      "sources": [
+        {"name": "NKGSB Bank (official PDFs)", "url": "https://www.nkgsb-bank.com", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "MSC Bank", "url": "https://msc.bank.in", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "HDFC Bank", "url": "https://www.hdfcbank.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "ICICI Bank", "url": "https://www.icicibank.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "Axis Bank", "url": "https://www.axisbank.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "Kotak Mahindra Bank", "url": "https://www.kotak.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "IndusInd Bank", "url": "https://www.indusind.com", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S7_INTERNATIONAL_DEV_FINANCE",
+      "label": "International development finance and standard setters",
+      "slot": 2,
+      "covers": ["World Bank Group (incl. CGAP, which the World Bank hosts)", "IMF", "ADB", "AIIB", "NDB", "IFC", "BIS", "FSB", "FATF", "OECD"],
+      "seed_queries": ["World Bank senior economist financial sector India {year}", "IMF ADB AIIB senior financial specialist {year}", "NDB IFC senior specialist banking India {year}"],
+      "sources": [
+        {"name": "IMF recruitment", "url": "https://www.imf.org/en/about/recruitment/find-the-right-imf-job", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "ADB careers", "url": "https://www.adb.org/careers", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "AIIB job vacancies", "url": "https://www.aiib.org/en/opportunities/career/job-vacancies/", "kind": "official_careers", "provenance": "search_result", "last_attempt": null},
+        {"name": "World Bank careers", "url": "https://www.worldbank.org/en/about/careers", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "IFC careers", "url": "https://www.ifc.org/en/careers", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "NDB", "url": "https://www.ndb.int", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null}
+      ]
+    },
+    {
+      "id": "S8_UN_GLOBAL_AGENCIES",
+      "label": "UN and global health and policy agencies (WHO, UNDP, UNICEF, ILO, others)",
+      "slot": 2,
+      "covers": ["WHO", "UNDP", "UNICEF", "ILO", "UNCTAD", "UNCDF", "IFAD", "FAO", "UNIDO", "GCF", "GEF"],
+      "seed_queries": ["WHO senior officer finance India vacancy {year}", "UNDP UNICEF ILO senior advisor financial inclusion {year}", "UN agency senior economist India {year}"],
+      "sources": [
+        {"name": "WHO careers", "url": "https://www.who.int/about/careers", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "UNDP careers", "url": "https://www.undp.org/careers", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "UNICEF careers", "url": "https://www.unicef.org/careers", "kind": "official_careers", "provenance": "from_memory", "last_attempt": null},
+        {"name": "UN Careers (discovery only)", "url": "https://uncareer.net", "kind": "aggregator", "provenance": "search_result", "last_attempt": null}
+      ]
+    }
+  ]
+}
